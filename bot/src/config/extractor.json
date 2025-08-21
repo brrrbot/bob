@@ -1,0 +1,12 @@
+{
+    "Youtubei": {
+        "enabled": true,
+        "client": "WEB_EMBEDDED",
+        "sabr": false,
+        "potoken": true
+    },
+    "Spotify": {
+        "enabled": true,
+        "useAccount": false
+    }
+}

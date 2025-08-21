@@ -1,0 +1,28 @@
+import { GuildMember } from "discord.js";
+import { handleSlash } from "./slash.js";
+import { handleButton } from "./buttons.js";
+export function handleInteraction(client, player) {
+    client.on("interactionCreate", async (interaction) => {
+        if (interaction.isChatInputCommand()) {
+            if (!(interaction.member instanceof GuildMember) || !interaction.member.voice.channel) {
+                return void interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
+            }
+            if (interaction.guild.members.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId) {
+                return void interaction.reply({ content: "You are not in my voice channel!", ephemeral: true });
+            }
+            handleSlash(interaction, player);
+        }
+        else if (interaction.isButton()) {
+            if (!(interaction.member instanceof GuildMember) || !interaction.member.voice.channel) {
+                return void interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
+            }
+            if (interaction.guild.members.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId) {
+                return void interaction.reply({ content: "You are not in my voice channel!", ephemeral: true });
+            }
+            handleButton(interaction);
+        }
+        else {
+            return;
+        }
+    });
+}
