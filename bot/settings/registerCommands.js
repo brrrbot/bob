@@ -1,5 +1,6 @@
-require('dotenv').config();
-const { REST,Routes } = require('discord.js');
+import dotenv from "dotenv";
+import { REST, Routes } from "discord.js";
+dotenv.config()
 
 // List of commands
 const commands = [
@@ -62,7 +63,7 @@ const guildIds = process.env.GUILD_IDS?.split(',') || [];
     }
 
     for (let i = 0; i < tokens.length; i++) {
-        const rest = new REST({ version: 10 }).setTokens(tokens[i]);
+        const rest = new REST({ version: 10 }).setToken(tokens[i]);
         const clientId = clientIds[i];
 
         for (const guildId of guildIds) {
