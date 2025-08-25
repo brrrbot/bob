@@ -4,51 +4,43 @@ dotenv.config()
 
 // List of commands
 const commands = [
-    // Play Youtube Song
     {
-        name: "yt",
-        description: "Play Youtube Song",
+        name: "play",
+        description: "Plays a given song/playlist from URL",
         options: [{
             name: "query",
             type: 3,
-            description: "song name",
+            description: "Song/Playlist URL (name might not work)",
             required: true,
         }],
     },
-    // Play Spotify Song
     {
-        name: "sf",
-        description: "Play Spotify Song",
-        options: [{
-            name: "query",
-            type: 3,
-            description: "song name",
-            required: true,
-        }],
+        name: "search",
+        description: "Search songs/playlists by name",
+        options:[
+            {
+                name: "source",
+                type: 3,
+                description: "Music Source",
+                required: true,
+                choices: [
+                    { name: "Youtube", value: "youtube" },
+                    { name: "Spotify", value: "spotify" },
+                ],
+            },
+            {
+                name: "query",
+                type: 3,
+                description: "Song Name",
+                required: true,
+            },
+        ],
     },
-    // Play Youtube Playlist
     {
-        name: "ytp",
-        description: "Play Youtube Playlist",
-        options: [{
-            name: "query",
-            type: 3,
-            description: "playlist url",
-            required: true,
-        }],
+        name: "ui",
+        description: "UI interface for music player (experimental)",
     },
-    // Play Spotify Playlist
-    {
-        name: "sfp",
-        description: "Play Spotify Playlist",
-        options: [{
-            name: "query",
-            type: 3,
-            description: "playlist url",
-            required: true,
-        }],
-    },
-]
+];
 
 // Read data from environment file
 const tokens = process.env.TOKENS?.split(',') || [];
