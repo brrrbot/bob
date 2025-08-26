@@ -1,22 +1,19 @@
 import { Player } from "discord-player";
 import { ChatInputCommandInteraction } from "discord.js";
-import { play } from "../commands/music/play.js"; 
+import { play } from "../commands/music/play";
+import { search } from "../commands/music/search";
 
-/**
- * Handles incoming slash commands related to music playback.
- * @param interaction
- * @param player
- */
-export async function handleSlash(interaction: ChatInputCommandInteraction, player: Player) {
+export async function handleSlash(player: Player, interaction: ChatInputCommandInteraction) {
     await interaction.deferReply();
-    const commandMap: Record<string, string> = {
-        yt: "youtube",
-        sf: "spotify",
-        ytp: "youtube-playlist",
-        sfp: "spotify-playlist"
+    const commandMap: Record<string, (p: Player, i: ChatInputCommandInteraction) => Promise<any>> = {
+        play,
+        search
     };
-    const source = commandMap[interaction.commandName];
-    if (source) {
-        play(interaction, player, source);
+    const command = commandMap[interaction.commandName];
+    try {
+        await command(player, interaction);
+    } catch (error) {
+        console.error("Error performing slash commands: ", error);
+        await interaction.followUp({ content: "Something went wrong while handling this action" });
     }
 }
