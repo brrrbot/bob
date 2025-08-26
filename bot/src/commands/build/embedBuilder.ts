@@ -6,6 +6,11 @@ import { buttons } from "./buttonBuilder.js";
 type ColorsType = Record<string, ColorResolvable>
 const colors = colorsJson as ColorsType;
 
+/**
+ * Creates embed for when song/playlist is added into queue
+ * @param item - Either searchResult.tracks[n] or searchResult.playlist.tracks
+ * @returns embed value to be passed into "embeds:" in discord interaction replies
+ */
 export function buildEmbed(item: Track | Playlist) {
     const isPlaylist = "tracks" in item;
     const id = isPlaylist
@@ -43,6 +48,12 @@ export function buildEmbed(item: Track | Playlist) {
     return embed;
 }
 
+/**
+ * Creates an embed based on user's query along with song select menu
+ * @param searchResult - Search Results from /search command
+ * @param source - Platform where song/playlist is extracted from for color picking
+ * @returns object with search result embed and user select menu
+ */
 export function buildSearchEmbed(searchResult: SearchResult, source: string) {
     const tracks = searchResult.tracks.slice(0, 3);
     const embed = new EmbedBuilder()
@@ -72,6 +83,10 @@ export function buildSearchEmbed(searchResult: SearchResult, source: string) {
     return { embeds: [embed], components: [row] };
 }
 
+/**
+ * Player event handler to send embed for each new songs in queue playing
+ * @param player - Player instances
+ */
 export function buildStartEmbed(player: Player) {
     player.events.on("playerStart", (queue, track) => {
         let embed = new EmbedBuilder();

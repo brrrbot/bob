@@ -9,6 +9,11 @@ const extractorMap: Record<string, any> = {
     "spotify": SpotifyExtractor.identifier,
 };
 
+/**
+ * Search user's queries using specified extractor and calls buildSearchEmbed
+ * @param player - Player instances
+ * @param interaction - Slash command interaction
+ */
 export async function search(player: Player, interaction: ChatInputCommandInteraction) {
     const query = interaction.options.getString("query");
     const source = interaction.options.getString("source");

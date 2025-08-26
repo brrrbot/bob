@@ -2,6 +2,11 @@ import { Player, QueryType } from "discord-player";
 import { ChatInputCommandInteraction, GuildMember } from "discord.js";
 import { buildEmbed } from "../build/embedBuilder.js";
 
+/**
+ * Searches for song/playlist given (preferably URL) and add to queue
+ * @param player - Player instances
+ * @param interaction - Slash command interaction
+ */
 export async function play(player: Player, interaction: ChatInputCommandInteraction) {
     const query = interaction.options.getString("query");
     if (!query) return void interaction.followUp({ content: "No query provided" });

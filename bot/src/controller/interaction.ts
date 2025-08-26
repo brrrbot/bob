@@ -3,6 +3,11 @@ import { handleSlash } from "./slash.js";
 import { handleButton } from "./buttons.js";
 import { Player } from "discord-player";
 
+/**
+ * Catches all interaction and direct appropriately to button handler or slash handler (exclude queue page change buttons)
+ * @param client - Discord Client instances
+ * @param player - Player instances
+ */
 export function handleInteraction(client: Client, player: Player) {
 
     client.on("interactionCreate", async (interaction: Interaction) => {
