@@ -6,6 +6,11 @@ const extractorMap = {
     "youtube": YoutubeiExtractor.identifier,
     "spotify": SpotifyExtractor.identifier,
 };
+/**
+ * Search user's queries using specified extractor and calls buildSearchEmbed
+ * @param player - Player instances
+ * @param interaction - Slash command interaction
+ */
 export async function search(player, interaction) {
     const query = interaction.options.getString("query");
     const source = interaction.options.getString("source");
@@ -15,6 +20,7 @@ export async function search(player, interaction) {
     });
     if (!searchResult || !searchResult.tracks.length)
         return void interaction.followUp({ content: "No results found!" });
+    console.log(searchResult);
     let queue = player.nodes.get(interaction.guild);
     if (!queue)
         queue = await player.nodes.create(interaction.guild, { metadata: interaction.channel });

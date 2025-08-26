@@ -5,7 +5,9 @@ import extractorconfig from "../config/extractor.json" with { type: "json" };
 import dotenv from "dotenv";
 dotenv.config();
 /**
- * Initialize and return a new Discord Player instance.
+ * Initialize a new Discord Player instance.
+ * @param client - Discord Client
+ * @returns player - Player with configs specified in /bot/src/config/player.json
  */
 export function initPlayer(client) {
     return new Player(client, {
@@ -15,9 +17,10 @@ export function initPlayer(client) {
 }
 /**
  * Register all extractors and stream hooks for the player.
+ * @param player - Player instances to register extractor for
+ * @requires extractorconfig - Configs for extractor specified in /bot/src/config/extractor.json
  */
 export async function registerExtractors(player) {
-    // Handle pre-stream logic (e.g., Youtubei/Spotify direct streams)
     onBeforeCreateStream(async (track, queryType, queue) => {
         try {
             if (track.extractor?.identifier === YoutubeiExtractor.identifier ||
@@ -54,6 +57,7 @@ export async function registerExtractors(player) {
 }
 /**
  * Unregister all extractors and re-register them.
+ * @summary Function to reload extractors
  */
 export async function reload(player) {
     try {
@@ -67,7 +71,7 @@ export async function reload(player) {
     }
 }
 /**
- * Build Youtubei extractor options from config.
+ * Get Youtubei Configuration
  */
 function getYoutubeiOptions(config) {
     return {
@@ -79,7 +83,7 @@ function getYoutubeiOptions(config) {
     };
 }
 /**
- * Build Spotify extractor options from config + env vars.
+ * Get Spotify Configuration
  */
 function getSpotifyOptions(config) {
     if (!config.useAccount)

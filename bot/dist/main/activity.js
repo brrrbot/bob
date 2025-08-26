@@ -1,3 +1,6 @@
+/**
+ * Rotating activity status for discord bot
+ */
 export function activity(client) {
     client.once("ready", () => {
         console.log(`${client.user?.tag} has logged in!`);

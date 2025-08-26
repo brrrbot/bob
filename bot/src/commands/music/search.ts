@@ -23,7 +23,6 @@ export async function search(player: Player, interaction: ChatInputCommandIntera
         searchEngine: `ext:${extractorMap[source]}`,
     });
     if (!searchResult || !searchResult.tracks.length) return void interaction.followUp({ content: "No results found!" });
-
     let queue = player.nodes.get(interaction.guild);
     if (!queue) queue = await player.nodes.create(interaction.guild, { metadata: interaction.channel });
 

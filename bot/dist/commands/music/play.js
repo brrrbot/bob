@@ -1,5 +1,10 @@
 import { QueryType } from "discord-player";
 import { buildEmbed } from "../build/embedBuilder.js";
+/**
+ * Searches for song/playlist given (preferably URL) and add to queue
+ * @param player - Player instances
+ * @param interaction - Slash command interaction
+ */
 export async function play(player, interaction) {
     const query = interaction.options.getString("query");
     if (!query)
