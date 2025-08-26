@@ -1,16 +1,18 @@
-import { search } from "./search.js";
-import { buildEmbedForPlaylist, buildEmbedForSong } from "../build/embedBuilder.js";
+import { QueryType } from "discord-player";
+import { buildEmbed } from "../build/embedBuilder.js";
 /**
- * Handles playing a track or playlist based on a slash command interaction.
- * @param interaction
- * @param player
- * @param type
+ * Searches for song/playlist given (preferably URL) and add to queue
+ * @param player - Player instances
+ * @param interaction - Slash command interaction
  */
-export async function play(interaction, player, type) {
+export async function play(player, interaction) {
     const query = interaction.options.getString("query");
     if (!query)
-        return void interaction.followUp({ content: "No query provided!" });
-    const searchResult = await search(query, interaction, player, type);
+        return void interaction.followUp({ content: "No query provided" });
+    const searchResult = await player.search(query, {
+        requestedBy: interaction.user,
+        searchEngine: QueryType.AUTO,
+    });
     if (!searchResult || !searchResult.tracks.length)
         return void interaction.followUp({ content: "No results found!" });
     let queue = player.nodes.get(interaction.guild);
@@ -23,30 +25,21 @@ export async function play(interaction, player, type) {
         }
     }
     catch (error) {
-        console.error("Failed to join voice channel:", error);
+        console.error("Error joining voice channel: ", error);
         void player.destroy();
-        return void interaction.followUp({ content: "Could not join voice channel!" });
+        return void interaction.followUp({ content: "Could not join voice channel" });
     }
-    const isPlaylist = type.endsWith("-playlist");
     try {
-        if (isPlaylist) {
-            const playlist = searchResult.playlist;
-            queue.addTrack(playlist);
-            const embed = buildEmbedForPlaylist(playlist);
-            await interaction.followUp({ embeds: [embed] });
-        }
-        else {
-            const track = searchResult.tracks[0];
-            queue.addTrack(track);
-            const embed = buildEmbedForSong(track);
-            await interaction.followUp({ embeds: [embed] });
-        }
+        let item;
+        searchResult.playlist ? item = searchResult.playlist.tracks : item = searchResult.tracks[0];
+        queue.addTrack(item);
+        const embed = buildEmbed(searchResult.playlist ?? item);
+        await interaction.followUp({ embeds: [embed] });
     }
     catch (error) {
-        console.error("Failed to add track/playlist to queue:", error);
-        return void interaction.followUp({ content: "An error occurred while adding the track or playlist!" });
+        console.error("Error adding song/playlist to queue: ", error);
+        return void interaction.followUp({ content: "Could not add track/playlist" });
     }
-    if (!queue.isPlaying()) {
+    if (!queue.isPlaying())
         await queue.node.play();
-    }
 }

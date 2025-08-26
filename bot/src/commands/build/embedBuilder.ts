@@ -1,16 +1,21 @@
-import { ColorResolvable, EmbedBuilder } from "discord.js";
-import { Track, Playlist, Player } from "discord-player";
+import { ActionRowBuilder, ColorResolvable, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
+import { Track, Playlist, Player, SearchResult } from "discord-player";
 import colorsJson from "./colors.json" with { type: "json" };
-import { buttons } from "./buttonBuilder";
+import { buttons } from "./buttonBuilder.js";
 
 type ColorsType = Record<string, ColorResolvable>
 const colors = colorsJson as ColorsType;
 
+/**
+ * Creates embed for when song/playlist is added into queue
+ * @param item - Either searchResult.tracks[n] or searchResult.playlist.tracks
+ * @returns embed value to be passed into "embeds:" in discord interaction replies
+ */
 export function buildEmbed(item: Track | Playlist) {
     const isPlaylist = "tracks" in item;
     const id = isPlaylist
-        ? item.tracks[0]?.extractor?.identifier ?? "default"
-        : item.extractor?.identifier ?? "default";
+        ? item.tracks[0]?.raw?.source ?? "default"
+        : item.raw?.source ?? "default";
     const color = colors[id] || colors.default;
 
     const embed = new EmbedBuilder()
@@ -43,7 +48,46 @@ export function buildEmbed(item: Track | Playlist) {
     return embed;
 }
 
-export function buildStartEmbed(player: Player, track: Track) {
+/**
+ * Creates an embed based on user's query along with song select menu
+ * @param searchResult - Search Results from /search command
+ * @param source - Platform where song/playlist is extracted from for color picking
+ * @returns object with search result embed and user select menu
+ */
+export function buildSearchEmbed(searchResult: SearchResult, source: string) {
+    const tracks = searchResult.tracks.slice(0, 3);
+    const embed = new EmbedBuilder()
+        .setTitle(`Search Results (${source})`)
+        .setDescription(tracks.map((t, i) =>
+            `**${i + 1}.** [${t.title}](${t.url})\n` +
+            ` by *${t.author}* • ${t.duration}`
+        ).join("\n\n"))
+        .setColor(colors[source] ?? 0x5865f2)
+        .setFooter({ text: "Select a track from the menu below" });
+
+    const selectMenu = new StringSelectMenuBuilder()
+        .setCustomId("selectedTrack")
+        .setPlaceholder("Select a track to play");
+
+    tracks.forEach((track, i) => {
+        selectMenu.addOptions(
+            new StringSelectMenuOptionBuilder()
+                .setLabel(track.title.slice(0, 100))
+                .setDescription(`${track.author.slice(0, 50)} • ${track.duration}`)
+                .setValue(track.url)
+        );
+    });
+
+    const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
+
+    return { embeds: [embed], components: [row] };
+}
+
+/**
+ * Player event handler to send embed for each new songs in queue playing
+ * @param player - Player instances
+ */
+export function buildStartEmbed(player: Player) {
     player.events.on("playerStart", (queue, track) => {
         let embed = new EmbedBuilder();
         embed

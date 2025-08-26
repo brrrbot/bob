@@ -1,19 +1,22 @@
 import { play } from "../commands/music/play.js";
+import { search } from "../commands/music/search.js";
 /**
- * Handles incoming slash commands related to music playback.
- * @param interaction
- * @param player
+ * Handles all incoming slash commands
+ * @param player - Player instances
+ * @param interaction - Slash command interaction
  */
-export async function handleSlash(interaction, player) {
+export async function handleSlash(player, interaction) {
     await interaction.deferReply();
     const commandMap = {
-        yt: "youtube",
-        sf: "spotify",
-        ytp: "youtube-playlist",
-        sfp: "spotify-playlist"
+        play,
+        search
     };
-    const source = commandMap[interaction.commandName];
-    if (source) {
-        play(interaction, player, source);
+    const command = commandMap[interaction.commandName];
+    try {
+        await command(player, interaction);
+    }
+    catch (error) {
+        console.error("Error performing slash commands: ", error);
+        await interaction.followUp({ content: "Something went wrong while handling this action" });
     }
 }

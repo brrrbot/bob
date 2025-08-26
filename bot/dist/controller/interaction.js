@@ -1,6 +1,11 @@
 import { GuildMember } from "discord.js";
 import { handleSlash } from "./slash.js";
 import { handleButton } from "./buttons.js";
+/**
+ * Catches all interaction and direct appropriately to button handler or slash handler (exclude queue page change buttons)
+ * @param client - Discord Client instances
+ * @param player - Player instances
+ */
 export function handleInteraction(client, player) {
     client.on("interactionCreate", async (interaction) => {
         if (interaction.isChatInputCommand()) {
@@ -10,7 +15,7 @@ export function handleInteraction(client, player) {
             if (interaction.guild.members.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId) {
                 return void interaction.reply({ content: "You are not in my voice channel!", ephemeral: true });
             }
-            handleSlash(interaction, player);
+            handleSlash(player, interaction);
         }
         else if (interaction.isButton()) {
             if (!(interaction.member instanceof GuildMember) || !interaction.member.voice.channel) {
@@ -19,6 +24,8 @@ export function handleInteraction(client, player) {
             if (interaction.guild.members.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId) {
                 return void interaction.reply({ content: "You are not in my voice channel!", ephemeral: true });
             }
+            if (interaction.customId.startsWith("queue_"))
+                return; // defer to queue collector
             handleButton(interaction);
         }
         else {
