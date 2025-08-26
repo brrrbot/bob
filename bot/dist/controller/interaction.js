@@ -19,6 +19,8 @@ export function handleInteraction(client, player) {
             if (interaction.guild.members.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId) {
                 return void interaction.reply({ content: "You are not in my voice channel!", ephemeral: true });
             }
+            if (interaction.customId.startsWith("queue_"))
+                return; // defer to queue collector
             handleButton(interaction);
         }
         else {

@@ -7,6 +7,7 @@ import { prev } from "../commands/utils/previous.js";
 import { repeat } from "../commands/utils/repeat.js";
 import { shuffle } from "../commands/utils/shuffle.js";
 import { skip } from "../commands/utils/skip.js";
+import { queue } from "../commands/utils/queue.js";
 
 /**
  * Handle incoming button interaction
@@ -23,6 +24,7 @@ export async function handleButton(interaction: ButtonInteraction) {
         shuffle,
         skip,
         stop,
+        queue,
     };
     const command = commandMap[interaction.customId];
     try {
