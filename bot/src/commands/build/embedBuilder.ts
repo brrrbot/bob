@@ -1,5 +1,5 @@
-import { ColorResolvable, EmbedBuilder } from "discord.js";
-import { Track, Playlist, Player } from "discord-player";
+import { ActionRowBuilder, ColorResolvable, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
+import { Track, Playlist, Player, SearchResult } from "discord-player";
 import colorsJson from "./colors.json" with { type: "json" };
 import { buttons } from "./buttonBuilder";
 
@@ -41,6 +41,35 @@ export function buildEmbed(item: Track | Playlist) {
     }
 
     return embed;
+}
+
+export function buildSearchEmbed(searchResult: SearchResult, source: string) {
+    const tracks = searchResult.tracks.slice(0, 3);
+    const embed = new EmbedBuilder()
+        .setTitle(`Search Results (${source})`)
+        .setDescription(tracks.map((t, i) =>
+            `**${i + 1}.** [${t.title}](${t.url})\n` +
+            ` by *${t.author}* • ${t.duration}`
+        ).join("\n\n"))
+        .setColor(colors[source] ?? 0x5865f2)
+        .setFooter({ text: "Select a track from the menu below" });
+
+    const selectMenu = new StringSelectMenuBuilder()
+        .setCustomId("selectedTrack")
+        .setPlaceholder("Select a track to play");
+
+    tracks.forEach((track, i) => {
+        selectMenu.addOptions(
+            new StringSelectMenuOptionBuilder()
+                .setLabel(track.title.slice(0, 100))
+                .setDescription(`${track.author.slice(0, 50)} • ${track.duration}`)
+                .setValue(track.url)
+        );
+    });
+
+    const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
+
+    return { embeds: [embed], components: [row] };
 }
 
 export function buildStartEmbed(player: Player, track: Track) {
