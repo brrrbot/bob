@@ -36,10 +36,10 @@ const commands = [
             },
         ],
     },
-    {
-        name: "ui",
-        description: "UI interface for music player (experimental)",
-    },
+    // {
+    //     name: "ui",
+    //     description: "UI interface for music player (experimental)",
+    // },
 ];
 
 // Read data from environment file

@@ -7,6 +7,6 @@
     },
     "Spotify": {
         "enabled": true,
-        "useAccount": false
+        "useAccount": true
     }
 }

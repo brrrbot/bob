@@ -1,6 +1,6 @@
 import { Player, QueryType } from "discord-player";
 import { ChatInputCommandInteraction, GuildMember } from "discord.js";
-import { buildEmbed } from "../build/embedBuilder";
+import { buildEmbed } from "../build/embedBuilder.js";
 
 export async function play(player: Player, interaction: ChatInputCommandInteraction) {
     const query = interaction.options.getString("query");

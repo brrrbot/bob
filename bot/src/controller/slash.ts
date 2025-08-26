@@ -1,7 +1,7 @@
 import { Player } from "discord-player";
 import { ChatInputCommandInteraction } from "discord.js";
-import { play } from "../commands/music/play";
-import { search } from "../commands/music/search";
+import { play } from "../commands/music/play.js";
+import { search } from "../commands/music/search.js";
 
 export async function handleSlash(player: Player, interaction: ChatInputCommandInteraction) {
     await interaction.deferReply();

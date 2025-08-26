@@ -10,7 +10,7 @@ export function handleInteraction(client, player) {
             if (interaction.guild.members.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId) {
                 return void interaction.reply({ content: "You are not in my voice channel!", ephemeral: true });
             }
-            handleSlash(interaction, player);
+            handleSlash(player, interaction);
         }
         else if (interaction.isButton()) {
             if (!(interaction.member instanceof GuildMember) || !interaction.member.voice.channel) {

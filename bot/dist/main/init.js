@@ -3,7 +3,7 @@ import { initPlayer, registerExtractors } from "../audio/registerExtractors.js";
 import { activity } from "./activity.js";
 import { handleInteraction } from "../controller/interaction.js";
 import { handleError } from "../error/errorhandling.js";
-import { playerStart } from "../commands/build/embedBuilder.js";
+import { buildStartEmbed } from "../commands/build/embedBuilder.js";
 export function createClient() {
     // Create Client
     const client = new Client({
@@ -25,6 +25,6 @@ export function createClient() {
     // Error Handler for Player
     handleError(player);
     // Player Event Handler
-    playerStart(player);
+    buildStartEmbed(player);
     return client;
 }

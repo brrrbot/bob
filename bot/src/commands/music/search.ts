@@ -1,8 +1,8 @@
-import { Player, SearchResult } from "discord-player";
+import { Player } from "discord-player";
 import { SpotifyExtractor } from "discord-player-spotify";
 import { YoutubeiExtractor } from "discord-player-youtubei";
-import { ChatInputCommandInteraction, Client, ComponentType, GuildMember } from "discord.js";
-import { buildEmbed, buildSearchEmbed } from "../build/embedBuilder";
+import { ChatInputCommandInteraction, ComponentType, GuildMember } from "discord.js";
+import { buildEmbed, buildSearchEmbed } from "../build/embedBuilder.js";
 
 const extractorMap: Record<string, any> = {
     "youtube": YoutubeiExtractor.identifier,
@@ -33,7 +33,7 @@ export async function search(player: Player, interaction: ChatInputCommandIntera
         return void interaction.followUp({ content: "Could not join voice channel!" });
     }
 
-    const reply = await interaction.reply(buildSearchEmbed(searchResult, source));
+    const reply = await interaction.followUp(buildSearchEmbed(searchResult, source));
 
     const collector = reply.createMessageComponentCollector({
         componentType: ComponentType.StringSelect,
@@ -41,19 +41,16 @@ export async function search(player: Player, interaction: ChatInputCommandIntera
     });
 
     collector.on("collect", async i => {
-        if (i.user.id !== interaction.user.id) return i.followUp({ content: "This menu isnt for you!" });
+        await i.deferReply();
+        if (i.user.id !== interaction.user.id) return i.followUp({ content: "This menu isn't for you!" });
 
         const trackURL = i.values[0];
         const track = searchResult.tracks.find(t => t.url === trackURL);
-        if (!track) return void interaction.followUp({ content: "Track not found!" });
+        if (!track) return void i.followUp({ content: "Track not found!" });
         queue.addTrack(track);
 
-        if (!queue.node.isPlaying) await queue.node.play();
+        if (!queue.node.isPlaying()) await queue.node.play();
         await i.followUp({ embeds: [buildEmbed(track)] });
         collector.stop();
-    });
-
-    collector.on("end", () => {
-        reply.edit({ components: [] }).catch(() => { });
     });
 }

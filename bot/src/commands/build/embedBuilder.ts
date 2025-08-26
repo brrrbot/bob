@@ -1,7 +1,7 @@
 import { ActionRowBuilder, ColorResolvable, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import { Track, Playlist, Player, SearchResult } from "discord-player";
 import colorsJson from "./colors.json" with { type: "json" };
-import { buttons } from "./buttonBuilder";
+import { buttons } from "./buttonBuilder.js";
 
 type ColorsType = Record<string, ColorResolvable>
 const colors = colorsJson as ColorsType;
@@ -9,8 +9,8 @@ const colors = colorsJson as ColorsType;
 export function buildEmbed(item: Track | Playlist) {
     const isPlaylist = "tracks" in item;
     const id = isPlaylist
-        ? item.tracks[0]?.extractor?.identifier ?? "default"
-        : item.extractor?.identifier ?? "default";
+        ? item.tracks[0]?.raw?.source ?? "default"
+        : item.raw?.source ?? "default";
     const color = colors[id] || colors.default;
 
     const embed = new EmbedBuilder()
@@ -72,7 +72,7 @@ export function buildSearchEmbed(searchResult: SearchResult, source: string) {
     return { embeds: [embed], components: [row] };
 }
 
-export function buildStartEmbed(player: Player, track: Track) {
+export function buildStartEmbed(player: Player) {
     player.events.on("playerStart", (queue, track) => {
         let embed = new EmbedBuilder();
         embed

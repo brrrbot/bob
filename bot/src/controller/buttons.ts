@@ -1,12 +1,12 @@
 import { ButtonInteraction } from "discord.js";
-import { stop } from "../commands/utils/stop";
-import { autoplay } from "../commands/utils/autoplay";
-import { loop } from "../commands/utils/loop";
-import { pause } from "../commands/utils/pause";
-import { prev } from "../commands/utils/previous";
-import { repeat } from "../commands/utils/repeat";
-import { shuffle } from "../commands/utils/shuffle";
-import { skip } from "../commands/utils/skip";
+import { stop } from "../commands/utils/stop.js";
+import { autoplay } from "../commands/utils/autoplay.js";
+import { loop } from "../commands/utils/loop.js";
+import { pause } from "../commands/utils/pause.js";
+import { prev } from "../commands/utils/previous.js";
+import { repeat } from "../commands/utils/repeat.js";
+import { shuffle } from "../commands/utils/shuffle.js";
+import { skip } from "../commands/utils/skip.js";
 
 /**
  * Handle incoming button interaction
