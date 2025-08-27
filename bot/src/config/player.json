@@ -1,4 +1,0 @@
-{
-    "skipFFmpeg": false,
-    "FFmpegPath": "/path/to/ffmpeg"
-}
