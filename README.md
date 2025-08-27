@@ -4,7 +4,7 @@
 A (badly made) Discord music bot powered by Discord Player with support for Youtube & Spotify
 
 Requirements:
-1. Node.js (preferably >=18
+1. Node.js (preferably >=18)
 2. npm
 3. Discord bot token from Discord dev portal
 4. API if applicable (Spotify keys from Spotify dev website)
