@@ -23,13 +23,13 @@ SPOTIFY_CLIENT_ID=spotify-client-id
 SPOTIFY_CLIENT_SECRET=spotify-client-secret
 
 Commands:
-/play: Paste in URL
-/search: Select source and input name of song (doesnt work for playlist)
+- /play: Paste in URL
+- /search: Select source and input name of song (doesnt work for playlist)
 
 Credits:
-[@iTsMaaT](https://github.com/iTsMaaT) for Spotify extractor and bot code inspiration
-[@retrouser955](https://github.com/retrouser955) for Youtubei extractor
+- [@iTsMaaT](https://github.com/iTsMaaT) for Spotify extractor and bot code inspiration
+- [@retrouser955](https://github.com/retrouser955) for Youtubei extractor
 
 Built with:
-[discord.js](https://github.com/discordjs/discord.js)
-[discord-player](https://github.com/Androz2091/discord-player)
+- [discord.js](https://github.com/discordjs/discord.js)
+- [discord-player](https://github.com/Androz2091/discord-player)
