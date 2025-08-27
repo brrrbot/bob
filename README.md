@@ -1,7 +1,7 @@
 ![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)
 ![License](https://img.shields.io/github/license/brrrbot/bob)
 
-(A badly made) Discord music bot powered by Discord Player with support for Youtube & Spotify
+A (badly made) Discord music bot powered by Discord Player with support for Youtube & Spotify
 
 Requirements:
 1. Node.js (preferably >=18
