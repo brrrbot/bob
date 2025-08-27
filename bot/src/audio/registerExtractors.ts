@@ -3,9 +3,7 @@ import { Player, onBeforeCreateStream } from "discord-player";
 import { YoutubeiExtractor } from "discord-player-youtubei";
 import { SpotifyExtractor } from "discord-player-spotify";
 
-import playerconfig from "../config/player.json" with { type: "json" };
-import extractorconfig from "../config/extractor.json" with { type: "json" };
-
+import configs from "../config/config.json" with { type: "json" };
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -16,8 +14,8 @@ dotenv.config();
  */
 export function initPlayer(client: Client): Player {
     return new Player(client, {
-        // skipFFmpeg: playerconfig?.skipFFmpeg,
-        // ffmpegPath: playerconfig?.FFmpegPath,
+        skipFFmpeg: configs?.discordPlayer.skipFFmpeg,
+        ffmpegPath: configs.discordPlayer.ffmpegPath,
     });
 }
 
@@ -43,11 +41,11 @@ export async function registerExtractors(player: Player) {
     });
 
     // Register Youtubei
-    if (extractorconfig.Youtubei.enabled) {
+    if (configs.discordPlayer.extractors.Youtubei.enabled) {
         try {
             await player.extractors.register(
                 YoutubeiExtractor,
-                getYoutubeiOptions(extractorconfig.Youtubei)
+                getYoutubeiOptions(configs)
             );
             console.log("Youtubei extractor registered.");
         } catch (error) {
@@ -56,11 +54,11 @@ export async function registerExtractors(player: Player) {
     }
 
     // Register Spotify
-    if (extractorconfig.Spotify.enabled) {
+    if (configs.discordPlayer.extractors.Spotify.enabled) {
         try {
             await player.extractors.register(
                 SpotifyExtractor,
-                getSpotifyOptions(extractorconfig.Spotify)
+                getSpotifyOptions(configs)
             );
             console.log("Spotify extractor registered.");
         } catch (error) {
@@ -87,21 +85,22 @@ export async function reload(player: Player) {
 /**
  * Get Youtubei Configuration
  */
-function getYoutubeiOptions(config: any) {
+function getYoutubeiOptions(config) {
     return {
         streamOptions: {
-            useClient: config.client,
+            useClient: config.discordPlayer.extractors.Youtubei.config.client,
+            highWaterMark: config.discordPlayer.extractors.Youtubei.config.highWaterMark,
         },
-        useServerAbrStream: config.sabr,
-        generateWithPoToken: config.potoken,
+        useServerAbrStream: config.discordPlayer.extractors.Youtubei.config.sabr,
+        generateWithPoToken: config.discordPlayer.extractors.Youtubei.config.potokens,
     };
 }
 
 /**
  * Get Spotify Configuration
  */
-function getSpotifyOptions(config: any) {
-    if (!config.useAccount) return {};
+function getSpotifyOptions(config) {
+    if (!config.discordPlayer.extractors.Spotify.config.useAccount) return {};
 
     if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
         console.warn("Spotify credentials not set in environment variables.");

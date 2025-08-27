@@ -20,7 +20,6 @@ export async function search(player, interaction) {
     });
     if (!searchResult || !searchResult.tracks.length)
         return void interaction.followUp({ content: "No results found!" });
-    console.log(searchResult);
     let queue = player.nodes.get(interaction.guild);
     if (!queue)
         queue = await player.nodes.create(interaction.guild, { metadata: interaction.channel });

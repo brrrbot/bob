@@ -1,0 +1,54 @@
+{
+    "discordPlayer": {
+        "skipFFmpeg": false,
+        "ffmpegPath": null,
+        "playerOptions": {
+            "volume": 40,
+            "maxQueueSize": 1000
+        },
+        "extractors": {
+            "Subsonic": {
+                "enabled": false,
+                "priority": 1,
+                "config": {}
+            },
+            "Deezer": {
+                "enabled": false,
+                "priority": 1,
+                "config": {
+                    "useAccount": true,
+                    "reloadUserInterval": 32400000
+                }
+            },
+            "Youtubei": {
+                "enabled": true,
+                "priority": 5,
+                "config": {
+                    "client": "WEB_EMBEDDED",
+                    "highWaterMark": 2097152,
+                    "sabr": false,
+                    "potokens": true,
+                    "useCookie": false
+                }
+            },
+            "SoundCloud": {
+                "enabled": false,
+                "priority": 3,
+                "config": {}
+            },
+            "Spotify": {
+                "enabled": true,
+                "priority": 4,
+                "config": {
+                    "useAccount": true
+                }
+            },
+            "AppleMusic": {
+                "enabled": false,
+                "priority": 1,
+                "config": {}
+            }
+        },
+        "audioFilters": {}
+    }
+}
