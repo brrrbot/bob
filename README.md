@@ -16,11 +16,11 @@ How to use:
 4. npm run start
 
 env configuration: (seperate values with commas)
-TOKEN=bot-token
-CLIENT_IDS=discord-bot-user-id
-GUILD_IDS=server-id
-SPOTIFY_CLIENT_ID=spotify-client-id
-SPOTIFY_CLIENT_SECRET=spotify-client-secret
+- TOKEN=bot-token
+- CLIENT_IDS=discord-bot-user-id
+- GUILD_IDS=server-id
+- SPOTIFY_CLIENT_ID=spotify-client-id
+- SPOTIFY_CLIENT_SECRET=spotify-client-secret
 
 Commands:
 - /play: Paste in URL
