@@ -7,7 +7,7 @@ Requirements:
 1. Node.js (preferably >=18)
 2. npm
 3. Discord bot token from Discord dev portal
-4. API if applicable (Spotify keys from Spotify dev website)
+4. API keys if applicable (Spotify keys from Spotify dev website)
 5. ffmpeg and path to ffmpeg in system environment variables
 
 How to use:
