@@ -52,9 +52,9 @@ export async function search(player: Player, interaction: ChatInputCommandIntera
         const track = searchResult.tracks.find(t => t.url === trackURL);
         if (!track) return void i.followUp({ content: "Track not found!" });
         queue.addTrack(track);
+        await i.followUp({ embeds: [buildEmbed(track)] });
 
         if (!queue.node.isPlaying()) await queue.node.play();
-        await i.followUp({ embeds: [buildEmbed(track)] });
         collector.stop();
     });
 }
