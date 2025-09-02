@@ -11,4 +11,5 @@ export async function skip(interaction: ButtonInteraction) {
         .setDescription(`Skipped **${currentSong?.title || "Unknown Track"}**`)
         .setThumbnail(currentSong?.thumbnail!);
     await interaction.followUp({ embeds: [embed] });
+
 }

@@ -20,11 +20,11 @@ export async function queue(interaction: ButtonInteraction) {
         return new EmbedBuilder()
             .setColor(0x1db954)
             .setTitle("🎶 Current Queue")
-            .setThumbnail(queue.currentTrack.thumbnail)
+            .setThumbnail(queue.tracks[0].thumbnail)
             .setDescription(
-                `**▶️ Now Playing:**\n[${queue.currentTrack.title}] \`[${queue.currentTrack.duration}]\`\n` +
-                `Requested by: **${queue.currentTrack.requestedBy.displayName}**\n\n` +
-                (queuePage.length > 0 ? `**📜 Up Next:**\n${queuePage}` : `✅ Queue is empty.`)
+                `**▶️ Up Next:**\n[${queue.tracks[0].title}] \`[${queue.tracks[0].duration}]\`\n` +
+                `Requested by: **${queue.tracks[0].requestedBy.displayName}**\n\n` +
+                (queuePage.length > 0 ? `**📜 Queue List:**\n${queuePage}` : `✅ Queue is empty.`)
             )
             .setFooter({ text: `Page ${pageIndex + 1}/${totalPages} • ${queue.getSize()} total song${queue.getSize() !== 1 ? "s" : ""}` });
     };
