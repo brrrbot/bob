@@ -30,7 +30,7 @@ export async function handleButton(interaction: ButtonInteraction) {
     try {
         await command(interaction);
     } catch (error) {
-        console.error("Error performing button commands");
+        console.error("Error performing button commands: ", error);
         await interaction.followUp({ content: "Something went wrong while handling this action" });
     }
 }

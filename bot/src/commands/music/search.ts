@@ -5,8 +5,8 @@ import { ChatInputCommandInteraction, ComponentType, GuildMember } from "discord
 import { buildEmbed, buildSearchEmbed } from "../build/embedBuilder.js";
 
 const extractorMap: Record<string, any> = {
-    "youtube": YoutubeiExtractor.identifier,
-    "spotify": SpotifyExtractor.identifier,
+    "Youtube": YoutubeiExtractor.identifier,
+    "Spotify": SpotifyExtractor.identifier,
 };
 
 /**
@@ -18,11 +18,21 @@ export async function search(player: Player, interaction: ChatInputCommandIntera
     const query = interaction.options.getString("query");
     const source = interaction.options.getString("source");
 
-    const searchResult = await player.search(query, {
-        requestedBy: interaction.user,
-        searchEngine: `ext:${extractorMap[source]}`,
-    });
-    if (!searchResult || !searchResult.tracks.length) return void interaction.followUp({ content: "No results found!" });
+    let searchResult;
+    try {
+        searchResult = await player.search(query, {
+            requestedBy: interaction.user,
+            searchEngine: `ext:${extractorMap[source]}`,
+        });
+    } catch (err) {
+        console.error("Search error:", err);
+        return void interaction.followUp({ content: "There was an error searching for your query!" });
+    }
+
+    if (!searchResult || !searchResult.tracks.length) {
+        return void interaction.followUp({ content: "No results found!" });
+    }
+
     let queue = player.nodes.get(interaction.guild);
     if (!queue) queue = await player.nodes.create(interaction.guild, { metadata: interaction.channel });
 
@@ -37,7 +47,13 @@ export async function search(player: Player, interaction: ChatInputCommandIntera
         return void interaction.followUp({ content: "Could not join voice channel!" });
     }
 
-    const reply = await interaction.followUp(buildSearchEmbed(searchResult, source));
+    let reply;
+    try {
+        reply = await interaction.followUp(buildSearchEmbed(searchResult, source));
+    } catch (err) {
+        console.error("Failed to send search embed:", err);
+        return;
+    }
 
     const collector = reply.createMessageComponentCollector({
         componentType: ComponentType.StringSelect,
@@ -45,16 +61,30 @@ export async function search(player: Player, interaction: ChatInputCommandIntera
     });
 
     collector.on("collect", async i => {
-        await i.deferReply();
-        if (i.user.id !== interaction.user.id) return i.followUp({ content: "This menu isn't for you!" });
+        try {
+            await i.deferReply();
+            if (i.user.id !== interaction.user.id) return void i.followUp({ content: "This menu isn't for you!" });
 
-        const trackURL = i.values[0];
-        const track = searchResult.tracks.find(t => t.url === trackURL);
-        if (!track) return void i.followUp({ content: "Track not found!" });
-        queue.addTrack(track);
+            const trackURL = i.values[0];
+            const track = searchResult.tracks.find(t => t.url === trackURL);
+            if (!track) return void i.followUp({ content: "Track not found!" });
 
-        if (!queue.node.isPlaying()) await queue.node.play();
-        await i.followUp({ embeds: [buildEmbed(track)] });
-        collector.stop();
+            console.log(track);
+
+            queue.addTrack(track);
+            await i.followUp({ embeds: [buildEmbed(track)] });
+
+            if (!queue.node.isPlaying()) await queue.node.play();
+            collector.stop();
+        } catch (err) {
+            console.error("Collector error:", err);
+            void i.followUp({ content: "An error occurred while handling your selection." });
+        }
+    });
+
+    collector.on("end", collected => {
+        if (collected.size === 0) {
+            void interaction.followUp({ content: "Selection menu expired." });
+        }
     });
 }

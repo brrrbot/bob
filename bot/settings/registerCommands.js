@@ -24,8 +24,8 @@ const commands = [
                 description: "Music Source",
                 required: true,
                 choices: [
-                    { name: "Youtube", value: "youtube" },
-                    { name: "Spotify", value: "spotify" },
+                    { name: "Youtube", value: "Youtube" },
+                    { name: "Spotify", value: "Spotify" },
                 ],
             },
             {
@@ -36,10 +36,6 @@ const commands = [
             },
         ],
     },
-    // {
-    //     name: "ui",
-    //     description: "UI interface for music player (experimental)",
-    // },
 ];
 
 // Read data from environment file

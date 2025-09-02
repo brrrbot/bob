@@ -22,9 +22,9 @@ export async function queue(interaction: ButtonInteraction) {
             .setTitle("🎶 Current Queue")
             .setThumbnail(queue.currentTrack.thumbnail)
             .setDescription(
-                `**▶️ Now Playing:**\n[${queue.currentTrack.title}] \`[${queue.currentTrack.duration}]\`\n` +
+                `**▶️ Up Next:**\n[${queue.currentTrack.cleanTitle}] \`[${queue.currentTrack.duration}]\`\n` +
                 `Requested by: **${queue.currentTrack.requestedBy.displayName}**\n\n` +
-                (queuePage.length > 0 ? `**📜 Up Next:**\n${queuePage}` : `✅ Queue is empty.`)
+                (queuePage.length > 0 ? `**📜 Queue List:**\n${queuePage}` : `✅ Queue is empty.`)
             )
             .setFooter({ text: `Page ${pageIndex + 1}/${totalPages} • ${queue.getSize()} total song${queue.getSize() !== 1 ? "s" : ""}` });
     };

@@ -42,18 +42,27 @@ export function buildEmbed(item) {
  */
 export function buildSearchEmbed(searchResult, source) {
     const tracks = searchResult.tracks.slice(0, 3);
+    const color = colors[source.toLocaleLowerCase()] ?? 0x5865f2;
     const embed = new EmbedBuilder()
-        .setTitle(`Search Results (${source})`)
-        .setDescription(tracks.map((t, i) => `**${i + 1}.** [${t.title}](${t.url})\n` +
-        ` by *${t.author}* • ${t.duration}`).join("\n\n"))
-        .setColor(colors[source] ?? 0x5865f2)
-        .setFooter({ text: "Select a track from the menu below" });
+        .setTitle(`Search Results from ${source}`)
+        .setColor(color)
+        .setFooter({ text: "Select a track below" })
+        .setThumbnail(searchResult.requestedBy.avatarURL())
+        .addFields({ name: "Requested By", value: searchResult.requestedBy.username ?? "Unknown" });
+    tracks.forEach((track, index) => {
+        embed.addFields({
+            name: `${index + 1}. ${track.cleanTitle}`,
+            value: `Author: ${track.author}\nDuration: ${track.duration}`,
+            inline: false,
+        });
+    });
+    // Select menu
     const selectMenu = new StringSelectMenuBuilder()
         .setCustomId("selectedTrack")
         .setPlaceholder("Select a track to play");
-    tracks.forEach((track, i) => {
+    tracks.forEach((track) => {
         selectMenu.addOptions(new StringSelectMenuOptionBuilder()
-            .setLabel(track.title.slice(0, 100))
+            .setLabel(track.cleanTitle.slice(0, 100))
             .setDescription(`${track.author.slice(0, 50)} • ${track.duration}`)
             .setValue(track.url));
     });
@@ -68,14 +77,14 @@ export function buildStartEmbed(player) {
     player.events.on("playerStart", (queue, track) => {
         let embed = new EmbedBuilder();
         embed
-            .setColor(0x1db954)
+            .setColor("#39FF14")
             .setAuthor({
             name: 'Now Playing 🎶',
             iconURL: track.thumbnail
         })
             .setTitle(track.title)
             .setURL(track.url)
-            .setThumbnail(track.thumbnail)
+            .setThumbnail("https://cdn.discordapp.com/attachments/1154672911567818763/1412336714311143484/hatuneMiku.gif")
             .addFields({ name: 'Duration', value: track.duration, inline: true }, { name: 'Requested by', value: track.requestedBy?.username || 'Unknown', inline: true })
             .setFooter({
             text: 'Enjoy your music!',
