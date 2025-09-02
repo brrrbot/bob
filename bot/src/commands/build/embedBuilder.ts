@@ -56,30 +56,30 @@ export function buildEmbed(item: Track | Playlist) {
  */
 export function buildSearchEmbed(searchResult: SearchResult, source: string) {
     const tracks = searchResult.tracks.slice(0, 3);
-    const color = colors[source] ?? 0x5865f2
-    let embeds = [];
-    embeds.push(
-        new EmbedBuilder()
-            .setTitle(`Search Result from ${source}`)
-            .setColor(color)
-            .addFields({ name: "Requested By", value: searchResult.requestedBy.username ?? "Unknown" })
-            .setFooter({ text: "Select a track below" })
-    );
+    const color = colors[source.toLocaleLowerCase()] ?? 0x5865f2;
 
-    tracks.forEach((track) => {
-        embeds.push(
-            new EmbedBuilder()
-                .setColor(color)
-                .setTitle(track.cleanTitle)
-                .setURL(track.url)
-                .setThumbnail(track.thumbnail)
-                .addFields({ name: "Duration", value: track.duration, inline: true })
-        )
+    const embed = new EmbedBuilder()
+        .setTitle(`Search Results from ${source}`)
+        .setColor(color)
+        .setFooter({ text: "Select a track below" })
+        .setThumbnail(searchResult.requestedBy.avatarURL())
+        .addFields(
+            { name: "Requested By", value: searchResult.requestedBy.username ?? "Unknown" }
+        );
+
+    tracks.forEach((track, index) => {
+        embed.addFields({
+            name: `${index + 1}. ${track.cleanTitle}`,
+            value: `Author: ${track.author}\nDuration: ${track.duration}`,
+            inline: false,
+        });
     });
 
+    // Select menu
     const selectMenu = new StringSelectMenuBuilder()
         .setCustomId("selectedTrack")
         .setPlaceholder("Select a track to play");
+
     tracks.forEach((track) => {
         selectMenu.addOptions(
             new StringSelectMenuOptionBuilder()
@@ -88,9 +88,10 @@ export function buildSearchEmbed(searchResult: SearchResult, source: string) {
                 .setValue(track.url)
         );
     });
+
     const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
 
-    return { embeds: embeds, components: [row] };
+    return { embeds: [embed], components: [row] };
 }
 
 /**
