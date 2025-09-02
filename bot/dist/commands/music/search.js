@@ -3,8 +3,8 @@ import { YoutubeiExtractor } from "discord-player-youtubei";
 import { ComponentType } from "discord.js";
 import { buildEmbed, buildSearchEmbed } from "../build/embedBuilder.js";
 const extractorMap = {
-    "youtube": YoutubeiExtractor.identifier,
-    "spotify": SpotifyExtractor.identifier,
+    "Youtube": YoutubeiExtractor.identifier,
+    "Spotify": SpotifyExtractor.identifier,
 };
 /**
  * Search user's queries using specified extractor and calls buildSearchEmbed

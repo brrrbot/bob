@@ -56,31 +56,41 @@ export function buildEmbed(item: Track | Playlist) {
  */
 export function buildSearchEmbed(searchResult: SearchResult, source: string) {
     const tracks = searchResult.tracks.slice(0, 3);
-    const embed = new EmbedBuilder()
-        .setTitle(`Search Results (${source})`)
-        .setDescription(tracks.map((t, i) =>
-            `**${i + 1}.** [${t.title}](${t.url})\n` +
-            ` by *${t.author}* • ${t.duration}`
-        ).join("\n\n"))
-        .setColor(colors[source] ?? 0x5865f2)
-        .setFooter({ text: "Select a track from the menu below" });
+    const color = colors[source] ?? 0x5865f2
+    let embeds = [];
+    embeds.push(
+        new EmbedBuilder()
+            .setTitle(`Search Result from ${source}`)
+            .setColor(color)
+            .addFields({ name: "Requested By", value: searchResult.requestedBy.username ?? "Unknown" })
+            .setFooter({ text: "Select a track below" })
+    );
+
+    tracks.forEach((track) => {
+        embeds.push(
+            new EmbedBuilder()
+                .setColor(color)
+                .setTitle(track.cleanTitle)
+                .setURL(track.url)
+                .setThumbnail(track.thumbnail)
+                .addFields({ name: "Duration", value: track.duration, inline: true })
+        )
+    });
 
     const selectMenu = new StringSelectMenuBuilder()
         .setCustomId("selectedTrack")
         .setPlaceholder("Select a track to play");
-
-    tracks.forEach((track, i) => {
+    tracks.forEach((track) => {
         selectMenu.addOptions(
             new StringSelectMenuOptionBuilder()
-                .setLabel(track.title.slice(0, 100))
+                .setLabel(track.cleanTitle.slice(0, 100))
                 .setDescription(`${track.author.slice(0, 50)} • ${track.duration}`)
                 .setValue(track.url)
         );
     });
-
     const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
 
-    return { embeds: [embed], components: [row] };
+    return { embeds: embeds, components: [row] };
 }
 
 /**
@@ -98,7 +108,7 @@ export function buildStartEmbed(player: Player) {
             })
             .setTitle(track.title)
             .setURL(track.url)
-            .setThumbnail(track.thumbnail)
+            .setThumbnail("https://cdn.discordapp.com/attachments/1154672911567818763/1412336714311143484/hatuneMiku.gif")
             .addFields(
                 { name: 'Duration', value: track.duration, inline: true },
                 { name: 'Requested by', value: track.requestedBy?.username || 'Unknown', inline: true },
@@ -107,6 +117,6 @@ export function buildStartEmbed(player: Player) {
                 text: 'Enjoy your music!',
                 iconURL: 'https://cdn-icons-png.flaticon.com/128/9280/9280598.png'
             })
-            queue.metadata.send({ embeds: [embed], components: buttons() });
+        queue.metadata.send({ embeds: [embed], components: buttons() });
     });
 }

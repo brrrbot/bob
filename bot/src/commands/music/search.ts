@@ -5,8 +5,8 @@ import { ChatInputCommandInteraction, ComponentType, GuildMember } from "discord
 import { buildEmbed, buildSearchEmbed } from "../build/embedBuilder.js";
 
 const extractorMap: Record<string, any> = {
-    "youtube": YoutubeiExtractor.identifier,
-    "spotify": SpotifyExtractor.identifier,
+    "Youtube": YoutubeiExtractor.identifier,
+    "Spotify": SpotifyExtractor.identifier,
 };
 
 /**
