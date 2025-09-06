@@ -4,6 +4,7 @@ import { activity } from "./activity.js";
 import { handleInteraction } from "../controller/interaction.js";
 import { handleError } from "../error/errorhandling.js";
 import { buildStartEmbed } from "../commands/build/embedBuilder.js";
+import { Log } from "youtubei.js";
 export function createClient() {
     // Create Client
     const client = new Client({
@@ -26,5 +27,7 @@ export function createClient() {
     handleError(player);
     // Player Event Handler
     buildStartEmbed(player);
+    // Set log level none
+    Log.setLevel(Log.Level.NONE);
     return client;
 }
