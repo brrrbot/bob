@@ -1,4 +1,4 @@
-import { Player, QueryType } from "discord-player";
+import { Player, QueryType, SearchQueryType } from "discord-player";
 import { ChatInputCommandInteraction, GuildMember } from "discord.js";
 import { buildEmbed } from "../build/embedBuilder.js";
 
@@ -11,9 +11,13 @@ export async function play(player: Player, interaction: ChatInputCommandInteract
     const query = interaction.options.getString("query");
     if (!query) return void interaction.followUp({ content: "No query provided" });
 
+    // Set search engine
+    let searchEngine: SearchQueryType = QueryType.AUTO
+    if (/radiko\.jp/.test(query)) searchEngine = `ext:radiko` as SearchQueryType; // Check if Radiko URL
+
     const searchResult = await player.search(query, {
         requestedBy: interaction.user,
-        searchEngine: QueryType.AUTO,
+        searchEngine: searchEngine,
     });
     if (!searchResult || !searchResult.tracks.length) return void interaction.followUp({ content: "No results found!" });
 

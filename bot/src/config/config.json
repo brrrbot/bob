@@ -47,6 +47,11 @@
                 "enabled": false,
                 "priority": 1,
                 "config": {}
+            },
+            "Radiko": {
+                "enabled": true,
+                "priority":1,
+                "config": {}
             }
         },
         "audioFilters": {}
