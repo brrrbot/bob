@@ -1,7 +1,9 @@
 import { ActionRowBuilder, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import colorsJson from "./colors.json" with { type: "json" };
+import botcolors from "./botDeco.json" with { type: "json" };
 import { buttons } from "./buttonBuilder.js";
 const colors = colorsJson;
+const botDeco = botcolors;
 /**
  * Creates embed for when song/playlist is added into queue
  * @param item - Either searchResult.tracks[n] or searchResult.playlist.tracks
@@ -75,16 +77,17 @@ export function buildSearchEmbed(searchResult, source) {
  */
 export function buildStartEmbed(player) {
     player.events.on("playerStart", (queue, track) => {
+        const botId = player.client.user.id;
         let embed = new EmbedBuilder();
         embed
-            .setColor("#00FFFF")
+            .setColor(botDeco[botId].color ?? "Random")
             .setAuthor({
             name: 'Now Playing 🎶',
             iconURL: track.thumbnail
         })
             .setTitle(track.title)
             .setURL(track.url)
-            .setThumbnail("https://cdn.discordapp.com/attachments/1154672911567818763/1412336714311143484/hatuneMiku.gif")
+            .setThumbnail(botDeco[botId].thumbnail ?? player.client.user.avatar)
             .addFields({ name: 'Duration', value: track.duration, inline: true }, { name: 'Requested by', value: track.requestedBy?.username || 'Unknown', inline: true })
             .setFooter({
             text: 'Enjoy your music!',
