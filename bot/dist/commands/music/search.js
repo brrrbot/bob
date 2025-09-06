@@ -2,9 +2,11 @@ import { SpotifyExtractor } from "discord-player-spotify";
 import { YoutubeiExtractor } from "discord-player-youtubei";
 import { ComponentType } from "discord.js";
 import { buildEmbed, buildSearchEmbed } from "../build/embedBuilder.js";
+import { RadikoExtractor } from "discord-player-radiko";
 const extractorMap = {
     "Youtube": YoutubeiExtractor.identifier,
     "Spotify": SpotifyExtractor.identifier,
+    "Radiko": RadikoExtractor.identifier,
 };
 /**
  * Search user's queries using specified extractor and calls buildSearchEmbed

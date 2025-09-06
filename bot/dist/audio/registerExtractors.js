@@ -1,6 +1,7 @@
 import { Player, onBeforeCreateStream } from "discord-player";
 import { YoutubeiExtractor } from "discord-player-youtubei";
 import { SpotifyExtractor } from "discord-player-spotify";
+import { RadikoExtractor } from "discord-player-radiko";
 import configs from "../config/config.json" with { type: "json" };
 import dotenv from "dotenv";
 dotenv.config();
@@ -24,7 +25,8 @@ export async function registerExtractors(player) {
     onBeforeCreateStream(async (track, queryType, queue) => {
         try {
             if (track.extractor?.identifier === YoutubeiExtractor.identifier ||
-                track.extractor?.identifier === SpotifyExtractor.identifier) {
+                track.extractor?.identifier === SpotifyExtractor.identifier ||
+                track.extractor?.identifier === RadikoExtractor.identifier) {
                 return await track.extractor?.stream(track);
             }
             return undefined;
@@ -41,7 +43,7 @@ export async function registerExtractors(player) {
             console.log("Youtubei extractor registered.");
         }
         catch (error) {
-            console.error("Failed to register Youtubei extractor:", error);
+            console.error("Failed to register Youtubei extractor: ", error);
         }
     }
     // Register Spotify
@@ -51,7 +53,17 @@ export async function registerExtractors(player) {
             console.log("Spotify extractor registered.");
         }
         catch (error) {
-            console.error("Failed to register Spotify extractor:", error);
+            console.error("Failed to register Spotify extractor: ", error);
+        }
+    }
+    // Register Radiko
+    if (configs.discordPlayer.extractors.Radiko.enabled) {
+        try {
+            await player.extractors.register(RadikoExtractor, {});
+            console.log("Radiko extractor registered");
+        }
+        catch (error) {
+            console.error("Failed to register Radiko extractor: ", error);
         }
     }
 }

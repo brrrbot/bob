@@ -26,6 +26,7 @@ const commands = [
                 choices: [
                     { name: "Youtube", value: "Youtube" },
                     { name: "Spotify", value: "Spotify" },
+                    { name: "Radiko", value: "Radiko" },
                 ],
             },
             {

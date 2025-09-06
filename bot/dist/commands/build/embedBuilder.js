@@ -77,7 +77,7 @@ export function buildStartEmbed(player) {
     player.events.on("playerStart", (queue, track) => {
         let embed = new EmbedBuilder();
         embed
-            .setColor("#39FF14")
+            .setColor("#00FFFF")
             .setAuthor({
             name: 'Now Playing 🎶',
             iconURL: track.thumbnail

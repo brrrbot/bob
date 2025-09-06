@@ -3,10 +3,12 @@ import { SpotifyExtractor } from "discord-player-spotify";
 import { YoutubeiExtractor } from "discord-player-youtubei";
 import { ChatInputCommandInteraction, ComponentType, GuildMember } from "discord.js";
 import { buildEmbed, buildSearchEmbed } from "../build/embedBuilder.js";
+import { RadikoExtractor } from "discord-player-radiko";
 
 const extractorMap: Record<string, any> = {
     "Youtube": YoutubeiExtractor.identifier,
     "Spotify": SpotifyExtractor.identifier,
+    "Radiko": RadikoExtractor.identifier,
 };
 
 /**

@@ -22,7 +22,7 @@ export async function queue(interaction: ButtonInteraction) {
             .setTitle("🎶 Current Queue")
             .setThumbnail(queue.currentTrack.thumbnail)
             .setDescription(
-                `**▶️ Up Next:**\n[${queue.currentTrack.cleanTitle}] \`[${queue.currentTrack.duration}]\`\n` +
+                `**▶️ Current Song:**\n[${queue.currentTrack.cleanTitle}] \`[${queue.currentTrack.duration}]\`\n` +
                 `Requested by: **${queue.currentTrack.requestedBy.displayName}**\n\n` +
                 (queuePage.length > 0 ? `**📜 Queue List:**\n${queuePage}` : `✅ Queue is empty.`)
             )

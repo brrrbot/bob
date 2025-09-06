@@ -9,9 +9,13 @@ export async function play(player, interaction) {
     const query = interaction.options.getString("query");
     if (!query)
         return void interaction.followUp({ content: "No query provided" });
+    // Set search engine
+    let searchEngine = QueryType.AUTO;
+    if (/radiko\.jp/.test(query))
+        searchEngine = `ext:radiko`; // Check if Radiko URL
     const searchResult = await player.search(query, {
         requestedBy: interaction.user,
-        searchEngine: QueryType.AUTO,
+        searchEngine: searchEngine,
     });
     if (!searchResult || !searchResult.tracks.length)
         return void interaction.followUp({ content: "No results found!" });

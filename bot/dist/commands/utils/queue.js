@@ -18,7 +18,7 @@ export async function queue(interaction) {
             .setColor(0x1db954)
             .setTitle("🎶 Current Queue")
             .setThumbnail(queue.currentTrack.thumbnail)
-            .setDescription(`**▶️ Up Next:**\n[${queue.currentTrack.cleanTitle}] \`[${queue.currentTrack.duration}]\`\n` +
+            .setDescription(`**▶️ Current Song:**\n[${queue.currentTrack.cleanTitle}] \`[${queue.currentTrack.duration}]\`\n` +
             `Requested by: **${queue.currentTrack.requestedBy.displayName}**\n\n` +
             (queuePage.length > 0 ? `**📜 Queue List:**\n${queuePage}` : `✅ Queue is empty.`))
             .setFooter({ text: `Page ${pageIndex + 1}/${totalPages} • ${queue.getSize()} total song${queue.getSize() !== 1 ? "s" : ""}` });
