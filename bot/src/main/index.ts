@@ -51,7 +51,7 @@ async function main() {
     }
 }
 
-main().catch(error => {
+await main().catch(error => {
     console.error("Unhandled error during bot startup process:", error);
     process.exit(1);
 });
