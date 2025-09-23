@@ -1,37 +1,45 @@
 ![License](https://img.shields.io/github/license/brrrbot/bob)
 
-```
 **A (badly made) Discord music bot powered by Discord Player with support for Youtube & Spotify**
 
 **Requirements:**
+```
 1. Node.js
 2. npm
 3. Discord bot token from Discord dev portal
 4. API keys if applicable (Spotify keys from Spotify dev website)
 5. ffmpeg and path to ffmpeg in system environment variables
 6. yt-dlp & yt-dlp-rajiko installed for RadikoExtractor (using pip would be most convienient)
+```
 
 **How to use:**
+```
 1. clone this repo
 2. *npm i
 3. setup env and config files (add config files in /bot/src/commands/build -> colors.json && botDeco.json)
 4. *npm run deploy-command
 5. *npm run start
+```
 
 **env configuration: (seperate values with commas)**
+```
 TOKEN=bot-token(s)
 CLIENT_IDS=discord-bot-user-id(s)
 GUILD_IDS=server-id(s)
 SPOTIFY_CLIENT_ID=spotify-client-id
 SPOTIFY_CLIENT_SECRET=spotify-client-secret
+```
 
 **colors.json configuration**
+```
 {
   <source>: <color>,
   ...
 }
+```
 
 **botDeco.json configuration**
+```
 {
   <bot_user_id>: {
     "color": <color>,
@@ -39,10 +47,13 @@ SPOTIFY_CLIENT_SECRET=spotify-client-secret
   },
   ...
 }
+```
 
 **Commands:**
+```
 1. /play: Paste in URL
 2. /search: Select source and input name of song (doesnt work for playlist)
+```
 
 **Credits:**
 [@iTsMaaT](https://github.com/iTsMaaT) for Spotify extractor and bot code inspiration
@@ -51,4 +62,3 @@ SPOTIFY_CLIENT_SECRET=spotify-client-secret
 **Built with:**
 [discord.js](https://github.com/discordjs/discord.js)
 [discord-player](https://github.com/Androz2091/discord-player)
-```
