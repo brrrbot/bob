@@ -17,7 +17,7 @@ export class AutoplayButtonCommand implements buttonCommand {
             queue.setRepeatMode(QueueRepeatMode.AUTOPLAY);
         }
 
-        const content = queue.repeatMode === QueueRepeatMode.AUTOPLAY ? "Autoplay has been enabled." : "Autoplay has been disabled.";
+        const content = `Autoplay has been ${queue.repeatMode === QueueRepeatMode.AUTOPLAY ? "enabled" : "disabled"}`; 
         await interaction.followUp({ content: content });
     }
 }

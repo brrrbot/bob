@@ -17,7 +17,7 @@ export class ShuffleButtonCommand implements buttonCommand {
             queue.enableShuffle();
         }
         
-        const content = queue.isShuffling ? "Shuffling has been enabled." : "Shuffling has been disabled.";
+        const content = `Shuffling has been ${queue.isShuffling ? "enabled" : "disabled"}`;
         await interaction.followUp({ content: content, flags: "SuppressNotifications" });
     }
 }

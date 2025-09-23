@@ -11,11 +11,11 @@ export class RepeatButtonCommand {
             return void interaction.followUp({ content: "There is no queue in this server.", flags: "Ephemeral" });
         if (queue.repeatMode === QueueRepeatMode.TRACK) {
             queue.setRepeatMode(QueueRepeatMode.OFF);
-            await interaction.followUp({ content: "Repeat song has been disabled.", flags: "SuppressNotifications" });
         }
         else {
             queue.setRepeatMode(QueueRepeatMode.TRACK);
-            await interaction.followUp({ content: "Repeat song has been enabled.", flags: "SuppressNotifications" });
         }
+        const content = `Repeat song has been ${queue.repeatMode === QueueRepeatMode.TRACK ? "enabled" : "disabled"}`;
+        await interaction.followUp({ content: content });
     }
 }

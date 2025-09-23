@@ -17,7 +17,7 @@ export class LoopButtonCommand implements buttonCommand {
             queue.setRepeatMode(QueueRepeatMode.QUEUE);
         }
 
-        const content = queue.repeatMode === QueueRepeatMode.QUEUE ? "Loop has been enabled." : "Loop has been disabled.";
+        const content = `Loop has been ${queue.repeatMode === QueueRepeatMode.QUEUE ? "enabled" : "disabled"}`;
         await interaction.followUp({ content: content });
     }
 }
