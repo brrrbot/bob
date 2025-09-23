@@ -1,35 +1,45 @@
 import { GuildMember } from "discord.js";
-import { handleSlash } from "./slash.js";
-import { handleButton } from "./buttons.js";
-/**
- * Catches all interaction and direct appropriately to button handler or slash handler (exclude queue page change buttons)
- * @param client - Discord Client instances
- * @param player - Player instances
- */
-export function handleInteraction(client, player) {
-    client.on("interactionCreate", async (interaction) => {
-        if (interaction.isChatInputCommand()) {
-            if (!(interaction.member instanceof GuildMember) || !interaction.member.voice.channel) {
-                return void interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
-            }
-            if (interaction.guild.members.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId) {
-                return void interaction.reply({ content: "You are not in my voice channel!", ephemeral: true });
-            }
-            handleSlash(player, interaction);
+import { SlashHandler } from "./slash.js";
+import { ButtonHandler } from "./buttons.js";
+export class InteractionHandler {
+    constructor(client, player) {
+        this.client = client;
+        this.player = player;
+        this.buttonHandler = new ButtonHandler(player);
+        this.slashHandler = new SlashHandler(player);
+    }
+    register() {
+        this.client.on("interactionCreate", this.onInteractionCreate.bind(this));
+    }
+    async onInteractionCreate(interaction) {
+        if (!(await this.ensureUserInVoiceChannel(interaction))) {
+            return;
+        }
+        if (interaction.isChatInputCommand) {
+            await this.slashHandler.handle(interaction);
         }
         else if (interaction.isButton()) {
-            if (!(interaction.member instanceof GuildMember) || !interaction.member.voice.channel) {
-                return void interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
-            }
-            if (interaction.guild.members.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId) {
-                return void interaction.reply({ content: "You are not in my voice channel!", ephemeral: true });
-            }
             if (interaction.customId.startsWith("queue_"))
-                return; // defer to queue collector
-            handleButton(interaction);
+                return;
+            await this.buttonHandler.handle(interaction);
         }
         else {
             return;
         }
-    });
+    }
+    async ensureUserInVoiceChannel(interaction) {
+        if (interaction.isChatInputCommand() || interaction.isButton()) {
+            if (!(interaction.member instanceof GuildMember) || !interaction.member.voice.channel) {
+                await interaction.reply({ content: "You are not in a voice channel!", flags: "Ephemeral" });
+                return false;
+            }
+            const botVoiceChannelId = interaction.guild?.members.me?.voice.channelId;
+            const memberVoiceChannelId = interaction.member.voice.channelId;
+            if (botVoiceChannelId && memberVoiceChannelId !== botVoiceChannelId) {
+                await interaction.reply({ content: "You are not in my voice channel!", flags: "Ephemeral" });
+                return false;
+            }
+        }
+        return true;
+    }
 }

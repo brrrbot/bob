@@ -1,10 +1,9 @@
-/**
- * Rotating activity status for discord bot
- */
-export function activity(client) {
-    client.once("clientReady", () => {
-        console.log(`${client.user?.tag} has logged in!`);
-        const activities = [
+// src/handlers/ClientActivityHandler.ts
+import { ActivityType } from "discord.js";
+export class ClientActivityHandler {
+    constructor(clientInstance) {
+        this.intervalId = null;
+        this.activities = [
             "up and running ( ˶ˆᗜˆ˵ )",
             "happy with spotify access ♡⸜(˶˃ ᵕ ˂˶)⸝♡",
             "waiting for non-existent update patch",
@@ -13,9 +12,33 @@ export function activity(client) {
             "better than matchbox",
             "better than jockie music"
         ];
-        setInterval(() => {
-            const status = activities[Math.floor(Math.random() * activities.length)];
-            client.user?.setPresence({ activities: [{ name: `${status}` }] });
-        }, 5000);
-    });
+        this.intervalTime = 5000;
+        this.client = clientInstance;
+    }
+    register() {
+        this.client.once("ready", this.onClientReady.bind(this));
+    }
+    onClientReady() {
+        console.log(`${this.client.user?.tag} is ready!`);
+        this.startActivityRotation();
+    }
+    startActivityRotation() {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+        }
+        this.intervalId = setInterval(() => {
+            const status = this.activities[Math.floor(Math.random() * this.activities.length)];
+            this.client.user?.setPresence({
+                activities: [{ name: status, type: ActivityType.Playing }],
+                status: 'online'
+            });
+        }, this.intervalTime);
+    }
+    stopActivityRotation() {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+            console.log(`Activity rotation stopped for ${this.client.user?.tag}`);
+        }
+    }
 }

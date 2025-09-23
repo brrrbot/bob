@@ -1,12 +1,11 @@
 import { ActionRowBuilder, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import colorsJson from "./colors.json" with { type: "json" };
 import botcolors from "./botDeco.json" with { type: "json" };
-import { buttons } from "./buttonBuilder.js";
 const colors = colorsJson;
 const botDeco = botcolors;
 /**
  * Creates embed for when song/playlist is added into queue
- * @param item - Either searchResult.tracks[n] or searchResult.playlist.tracks
+ * @param item Either searchResult.tracks[n] or searchResult.playlist.tracks
  * @returns embed value to be passed into "embeds:" in discord interaction replies
  */
 export function buildEmbed(item) {
@@ -38,8 +37,8 @@ export function buildEmbed(item) {
 }
 /**
  * Creates an embed based on user's query along with song select menu
- * @param searchResult - Search Results from /search command
- * @param source - Platform where song/playlist is extracted from for color picking
+ * @param searchResult Search Results from /search command
+ * @param source Platform where song/playlist is extracted from for color picking
  * @returns object with search result embed and user select menu
  */
 export function buildSearchEmbed(searchResult, source) {
@@ -70,29 +69,4 @@ export function buildSearchEmbed(searchResult, source) {
     });
     const row = new ActionRowBuilder().addComponents(selectMenu);
     return { embeds: [embed], components: [row] };
-}
-/**
- * Player event handler to send embed for each new songs in queue playing
- * @param player - Player instances
- */
-export function buildStartEmbed(player) {
-    player.events.on("playerStart", (queue, track) => {
-        const botId = player.client.user.id;
-        let embed = new EmbedBuilder();
-        embed
-            .setColor(botDeco[botId].color ?? "Random")
-            .setAuthor({
-            name: 'Now Playing 🎶',
-            iconURL: track.thumbnail
-        })
-            .setTitle(track.title)
-            .setURL(track.url)
-            .setThumbnail(botDeco[botId].thumbnail ?? player.client.user.avatar)
-            .addFields({ name: 'Duration', value: track.duration, inline: true }, { name: 'Requested by', value: track.requestedBy?.username || 'Unknown', inline: true })
-            .setFooter({
-            text: 'Enjoy your music!',
-            iconURL: 'https://cdn-icons-png.flaticon.com/128/9280/9280598.png'
-        });
-        queue.metadata.send({ embeds: [embed], components: buttons() });
-    });
 }

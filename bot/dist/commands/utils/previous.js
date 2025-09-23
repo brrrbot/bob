@@ -1,9 +1,16 @@
 import { useQueue } from "discord-player";
-export async function prev(interaction) {
-    const queue = useQueue(interaction.guildId);
-    if (!queue)
-        return void interaction.followUp({ content: "There is no queue in this server" });
-    if (!queue.history.previousTrack)
-        return void interaction.followUp({ content: "This is the first song of the queue" });
-    queue.history.previous(true);
+export class PreviousButtonCommand {
+    constructor() {
+        this.customId = "prev";
+    }
+    async execute(interaction, player) {
+        if (!interaction.deferred && !interaction.replied)
+            await interaction.deferUpdate();
+        const queue = useQueue(interaction.guildId);
+        if (!queue)
+            return void await interaction.followUp({ content: "There is no queue in this server.", flags: "Ephemeral" });
+        if (!queue.history.previousTrack)
+            return void await interaction.followUp({ content: "No song to return to.", flags: "Ephemeral" });
+        await queue.history.previous(true);
+    }
 }
