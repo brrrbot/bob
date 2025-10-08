@@ -25,7 +25,7 @@ export class InteractionHandler {
             return
         }
 
-        if (interaction.isChatInputCommand) {
+        if (interaction.isChatInputCommand()) {
             await this.slashHandler.handle(interaction as ChatInputCommandInteraction);
         } else if (interaction.isButton()) {
             if (interaction.customId.startsWith("queue_")) return;
