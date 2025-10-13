@@ -1,14 +1,23 @@
-import { useQueue, QueueRepeatMode } from "discord-player";
+import { useQueue, QueueRepeatMode, Player } from "discord-player";
 import { ButtonInteraction } from "discord.js";
+import { buttonCommand } from "../../interfaces/buttonInterface";
 
-export async function loop(interaction: ButtonInteraction) {
-    const queue = useQueue(interaction.guildId);
-    if (!queue) return void interaction.followUp({ content: "There is no queue in this server" });
-    if (queue.repeatMode === QueueRepeatMode.QUEUE) {
-        queue.setRepeatMode(QueueRepeatMode.OFF);
-        await interaction.followUp({ content: "Loop has been disabled" });
-    } else {
-        queue.setRepeatMode(QueueRepeatMode.QUEUE);
-        await interaction.followUp({ content: "Loop has been enabled" });
+export class LoopButtonCommand implements buttonCommand {
+    public readonly customId: string = "loop";
+    
+    public async execute(interaction: ButtonInteraction, player: Player): Promise<void> {
+        if (!interaction.deferred && interaction.replied) await interaction.deferUpdate();
+
+        const queue = useQueue(interaction.guildId);
+        if (!queue) return void await interaction.followUp({ content: "There is no queue in this server.", flags: "Ephemeral" });
+
+        if (queue.repeatMode === QueueRepeatMode.QUEUE) {
+            queue.setRepeatMode(QueueRepeatMode.OFF);
+        } else {
+            queue.setRepeatMode(QueueRepeatMode.QUEUE);
+        }
+
+        const content = `Loop has been ${queue.repeatMode === QueueRepeatMode.QUEUE ? "enabled" : "disabled"}`;
+        await interaction.followUp({ content: content });
     }
 }

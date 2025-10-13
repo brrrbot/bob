@@ -1,8 +1,16 @@
 import { useQueue } from "discord-player";
-export async function pause(interaction) {
-    const queue = useQueue(interaction.guildId);
-    if (!queue)
-        return void interaction.followUp({ content: "There is no queue in this server" });
-    queue.node.setPaused(!queue.node.isPaused());
-    await interaction.followUp({ content: queue.node.isPaused ? "Music Paused" : "Music Resumed" });
+export class PauseButtonCommand {
+    constructor() {
+        this.customId = "pause";
+    }
+    async execute(interaction, player) {
+        if (!interaction.deferred && !interaction.replied)
+            await interaction.deferUpdate();
+        const queue = useQueue(interaction.guildId);
+        if (!queue)
+            return void await interaction.followUp({ content: "There is no queue in this server.", flags: "Ephemeral" });
+        queue.node.setPaused(!queue.node.isPaused());
+        const content = queue.node.isPaused() ? "Music Paused." : "Music Resumed.";
+        await interaction.followUp({ content: content, flags: "SuppressNotifications" });
+    }
 }

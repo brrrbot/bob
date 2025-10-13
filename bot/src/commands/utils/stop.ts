@@ -1,13 +1,21 @@
-import { useQueue } from "discord-player";
+import { Player, useQueue } from "discord-player";
 import { ButtonInteraction, EmbedBuilder } from "discord.js";
+import { buttonCommand } from "../../interfaces/buttonInterface";
 
-export async function stop(interaction: ButtonInteraction) {
-    const queue = useQueue(interaction.guildId);
-    if (!queue) return void interaction.followUp({ content: "There is no queue in this server" });
-    queue.delete();
-    const embed = new EmbedBuilder()
+export class StopButtonCommand implements buttonCommand {
+    public readonly customId: string = "stop";
+
+    public async execute(interaction: ButtonInteraction, player: Player): Promise<void> {
+        if (!interaction.deferred && !interaction.replied) await interaction.deferUpdate();
+
+        const queue = useQueue(interaction.guildId);
+        if (!queue) return void await interaction.followUp({ content: "There is no queue in this server.", flags: "Ephemeral" });
+
+        queue.delete();
+        const embed = new EmbedBuilder()
         .setColor("#FFFFFF")
-        .setDescription("Music player is stopped")
+        .setDescription("Music player is stopped.")
         .setFooter({ text: "why you bully me?🥺" });
-    await interaction.followUp({ embeds: [embed] });
+        await interaction.followUp({ embeds: [embed], flags: "SuppressNotifications" });
+    }
 }

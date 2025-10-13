@@ -3,8 +3,22 @@
         "skipFFmpeg": false,
         "ffmpegPath": null,
         "playerOptions": {
-            "volume": 40,
-            "maxQueueSize": 1000
+            "disableVolume": false,
+            "volume": 50,
+            "maxQueueSize": 200,
+            "leaveOnEmptyTimedOut": 30000,
+            "leaveOnEmpty": true,
+            "leaveOnEnd": true,
+            "leaveOnStop": true,
+            "paused": false,
+            "maxHistorySize": 500,
+            "connection": {
+                "deaf": true,
+                "mute": false,
+                "reconnectTimeout": 30000,
+                "maxReconnectAttempts": 5
+            },
+            "disableQueueAutomaticStart": false
         },
         "extractors": {
             "Subsonic": {
@@ -25,7 +39,7 @@
                 "priority": 5,
                 "config": {
                     "client": "WEB_EMBEDDED",
-                    "highWaterMark": 2097152,
+                    "highWaterMark": 3145728,
                     "sabr": false,
                     "potokens": true,
                     "useCookie": false

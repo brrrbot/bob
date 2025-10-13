@@ -1,24 +1,53 @@
-import { Client } from "discord.js";
+// src/handlers/ClientActivityHandler.ts
+import { Client, ActivityType, PresenceStatusData } from "discord.js";
 
-/**
- * Rotating activity status for discord bot
- */
-export function activity(client: Client) {
-    client.once("clientReady", () => {
-        console.log(`${client.user?.tag} has logged in!`);
+export class ClientActivityHandler {
+    private client: Client;
+    private intervalId: NodeJS.Timeout | null = null;
+    private activities: string[] = [
+        "up and running ( ˶ˆᗜˆ˵ )",
+        "happy with spotify access ♡⸜(˶˃ ᵕ ˂˶)⸝♡",
+        "waiting for non-existent update patch",
+        "fantasizing about the money earn from being a music bot (,,>ヮ<,,)!",
+        "🎶🎶🎶",
+        "better than matchbox",
+        "better than jockie music"
+    ];
+    private intervalTime: number = 5000; 
 
-        const activities = [
-            "up and running ( ˶ˆᗜˆ˵ )",
-            "happy with spotify access ♡⸜(˶˃ ᵕ ˂˶)⸝♡",
-            "waiting for non-existent update patch",
-            "fantasizing about the money earn from being a music bot (,,>ヮ<,,)!",
-            "🎶🎶🎶",
-            "better than matchbox",
-            "better than jockie music"
-        ];
-        setInterval(() => {
-            const status = activities[Math.floor(Math.random() * activities.length)];
-            client.user?.setPresence({ activities: [{ name: `${status}` }] });
-        }, 5000);
-    });
+    constructor(clientInstance: Client) {
+        this.client = clientInstance;
+    }
+
+    public register() {
+        this.client.once("ready", this.onClientReady.bind(this));
+    }
+
+    private onClientReady() {
+        console.log(`${this.client.user?.tag} is ready!`);
+
+        this.startActivityRotation();
+    }
+
+    private startActivityRotation() {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+        }
+
+        this.intervalId = setInterval(() => {
+            const status = this.activities[Math.floor(Math.random() * this.activities.length)];
+            this.client.user?.setPresence({
+                activities: [{ name: status, type: ActivityType.Playing }],
+                status: 'online' as PresenceStatusData
+            });
+        }, this.intervalTime);
+    }
+
+    public stopActivityRotation() {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+            console.log(`Activity rotation stopped for ${this.client.user?.tag}`);
+        }
+    }
 }

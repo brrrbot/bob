@@ -1,50 +1,53 @@
+import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
+import { SlashCommand } from "../../interfaces/slashInterface";
 import { Player, QueryType, SearchQueryType } from "discord-player";
-import { ChatInputCommandInteraction, GuildMember } from "discord.js";
-import { buildEmbed } from "../build/embedBuilder.js";
+import { buildEmbed } from "../build/embedBuilder";
+import BotConfig from "../../config/config.json" with { type: "json" };
 
-/**
- * Searches for song/playlist given (preferably URL) and add to queue
- * @param player - Player instances
- * @param interaction - Slash command interaction
- */
-export async function play(player: Player, interaction: ChatInputCommandInteraction) {
-    const query = interaction.options.getString("query");
-    if (!query) return void interaction.followUp({ content: "No query provided" });
+export class PlayCommand implements SlashCommand {
+    public readonly commandName: string = "play";
 
-    // Set search engine
-    let searchEngine: SearchQueryType = QueryType.AUTO
-    if (/radiko\.jp/.test(query)) searchEngine = `ext:radiko` as SearchQueryType; // Check if Radiko URL
+    public readonly data = new SlashCommandBuilder()
+    .setName("play")
+    .setDescription("Plays a song/playlist or adds it to queue.")
+    .addStringOption(option => 
+        option.setName("query")
+        .setDescription("The song URL (Inputting name might not work, use /search instead.)")
+        .setRequired(true)
+    )
+    
+    public async execute(interaction: ChatInputCommandInteraction, player: Player): Promise<void> {
+        await interaction.deferReply();
 
-    const searchResult = await player.search(query, {
-        requestedBy: interaction.user,
-        searchEngine: searchEngine,
-    });
-    if (!searchResult || !searchResult.tracks.length) return void interaction.followUp({ content: "No results found!" });
+        const query = interaction.options.getString("query", true);
 
-    let queue = player.nodes.get(interaction.guild);
-    if (!queue) queue = await player.nodes.create(interaction.guild, { metadata: interaction.channel });
+        const member = interaction.member;
+        if (!(member instanceof GuildMember)) return void await interaction.followUp({ content: "This command can only be used in a server.", flags: "Ephemeral" });
 
-    try {
-        if (!queue.connection) {
-            const member = interaction.member as GuildMember;
-            await queue.connect(member.voice.channel);
+        const channel = member.voice.channel;
+        if (!channel) return void await interaction.followUp({ content: "You are not in a voice channel.", flags: "Ephemeral" });
+
+        const botVoiceChannelId = interaction.guild?.members.me?.voice.channelId;
+        if (botVoiceChannelId && channel.id !== botVoiceChannelId) return void await interaction.followUp({ content: "You are not in my voice channel.", flags: "Ephemeral" });
+
+        let searchEngine: SearchQueryType = QueryType.AUTO;
+        if (/radiko\.jp/.test(query)) searchEngine = `ext:radiko` as SearchQueryType;
+
+        try {
+            const { track, searchResult } = await player.play(channel, query, {
+                requestedBy: interaction.user,
+                searchEngine: searchEngine,
+                nodeOptions: {
+                    metadata: interaction.channel,
+                    ...BotConfig.discordPlayer.playerOptions,
+                }
+            });
+
+            const embed = buildEmbed(searchResult.playlist ?? track);
+            await interaction.followUp({ embeds: [embed] });
+        } catch (error) {
+            console.error("Error while excuting PlayCommand: ", error);
+            await interaction.followUp({ content: "An unexpected error occurred.", flags: "Ephemeral" });
         }
-    } catch (error) {
-        console.error("Error joining voice channel: ", error);
-        void player.destroy();
-        return void interaction.followUp({ content: "Could not join voice channel" });
     }
-
-    try {
-        let item;
-        searchResult.playlist ? item = searchResult.playlist.tracks : item = searchResult.tracks[0];
-        queue.addTrack(item);
-        const embed = buildEmbed(searchResult.playlist ?? item);
-        await interaction.followUp({ embeds: [embed] });
-    } catch (error) {
-        console.error("Error adding song/playlist to queue: ", error);
-        return void interaction.followUp({ content: "Could not add track/playlist" });
-    }
-
-    if (!queue.isPlaying()) await queue.node.play();
 }
