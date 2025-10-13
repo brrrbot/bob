@@ -15,7 +15,7 @@ export class InteractionHandler {
         if (!(await this.ensureUserInVoiceChannel(interaction))) {
             return;
         }
-        if (interaction.isChatInputCommand) {
+        if (interaction.isChatInputCommand()) {
             await this.slashHandler.handle(interaction);
         }
         else if (interaction.isButton()) {
