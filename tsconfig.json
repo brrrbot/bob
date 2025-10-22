@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "EsNext",
-    "moduleResolution": "Node",
+    "target": "ES2022",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "rootDir": "./bot/src",
     "outDir": "./bot/dist",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "strict": false
+    "strict": false,
+    "baseUrl": ".",
   },
   "include": ["bot/src/**/*"]
 }

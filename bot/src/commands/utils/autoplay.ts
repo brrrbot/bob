@@ -1,6 +1,6 @@
 import { Player, QueueRepeatMode, useQueue } from "discord-player";
 import { ButtonInteraction } from "discord.js";
-import { buttonCommand } from "../../interfaces/buttonInterface";
+import { buttonCommand } from "../../interfaces/buttonInterface.js";
 
 export class AutoplayButtonCommand implements buttonCommand {
     public readonly customId: string = "autoplay";

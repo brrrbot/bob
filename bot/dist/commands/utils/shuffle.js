@@ -1,8 +1,6 @@
 import { useQueue } from "discord-player";
 export class ShuffleButtonCommand {
-    constructor() {
-        this.customId = "shuffle";
-    }
+    customId = "shuffle";
     async execute(interaction, player) {
         if (!interaction.deferred && !interaction.replied)
             await interaction.deferUpdate();

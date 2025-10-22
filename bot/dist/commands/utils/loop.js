@@ -1,8 +1,6 @@
 import { useQueue, QueueRepeatMode } from "discord-player";
 export class LoopButtonCommand {
-    constructor() {
-        this.customId = "loop";
-    }
+    customId = "loop";
     async execute(interaction, player) {
         if (!interaction.deferred && interaction.replied)
             await interaction.deferUpdate();

@@ -1,6 +1,8 @@
-import { PlayCommand } from "../commands/music/play";
-import { SearchCommand } from "../commands/music/search";
+import { PlayCommand } from "../commands/music/play.js";
+import { SearchCommand } from "../commands/music/search.js";
 export class SlashHandler {
+    commands;
+    player;
     constructor(playerInstance) {
         this.player = playerInstance;
         this.commands = new Map();

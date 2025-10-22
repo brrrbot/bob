@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, GuildMember, Message } from "discord.js";
-import { buttonCommand } from "../../interfaces/buttonInterface";
+import { buttonCommand } from "../../interfaces/buttonInterface.js";
 import { Player, useQueue } from "discord-player";
 
 export class QueueButtonCommand implements buttonCommand {

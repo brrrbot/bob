@@ -20,7 +20,7 @@ export class ClientActivityHandler {
     }
 
     public register() {
-        this.client.once("ready", this.onClientReady.bind(this));
+        this.client.once("clientReady", this.onClientReady.bind(this));
     }
 
     private onClientReady() {

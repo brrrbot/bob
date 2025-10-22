@@ -1,6 +1,6 @@
 import { useQueue, QueueRepeatMode, Player } from "discord-player";
 import { ButtonInteraction } from "discord.js";
-import { buttonCommand } from "../../interfaces/buttonInterface";
+import { buttonCommand } from "../../interfaces/buttonInterface.js";
 
 export class LoopButtonCommand implements buttonCommand {
     public readonly customId: string = "loop";

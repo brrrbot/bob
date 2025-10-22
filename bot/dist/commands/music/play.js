@@ -1,17 +1,15 @@
 import { GuildMember, SlashCommandBuilder } from "discord.js";
 import { QueryType } from "discord-player";
-import { buildEmbed } from "../build/embedBuilder";
+import { buildEmbed } from "../build/embedBuilder.js";
 import BotConfig from "../../config/config.json" with { type: "json" };
 export class PlayCommand {
-    constructor() {
-        this.commandName = "play";
-        this.data = new SlashCommandBuilder()
-            .setName("play")
-            .setDescription("Plays a song/playlist or adds it to queue.")
-            .addStringOption(option => option.setName("query")
-            .setDescription("The song URL (Inputting name might not work, use /search instead.)")
-            .setRequired(true));
-    }
+    commandName = "play";
+    data = new SlashCommandBuilder()
+        .setName("play")
+        .setDescription("Plays a song/playlist or adds it to queue.")
+        .addStringOption(option => option.setName("query")
+        .setDescription("The song URL (Inputting name might not work, use /search instead.)")
+        .setRequired(true));
     async execute(interaction, player) {
         await interaction.deferReply();
         const query = interaction.options.getString("query", true);
@@ -28,6 +26,7 @@ export class PlayCommand {
         if (/radiko\.jp/.test(query))
             searchEngine = `ext:radiko`;
         try {
+            // @ts-expect-error
             const { track, searchResult } = await player.play(channel, query, {
                 requestedBy: interaction.user,
                 searchEngine: searchEngine,

@@ -2,6 +2,10 @@ import { GuildMember } from "discord.js";
 import { SlashHandler } from "./slash.js";
 import { ButtonHandler } from "./buttons.js";
 export class InteractionHandler {
+    client;
+    player;
+    buttonHandler;
+    slashHandler;
     constructor(client, player) {
         this.client = client;
         this.player = player;

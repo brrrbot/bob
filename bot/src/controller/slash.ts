@@ -1,7 +1,7 @@
 import { Player } from "discord-player";
-import { PlayCommand } from "../commands/music/play";
-import { SearchCommand } from "../commands/music/search";
-import { SlashCommand } from "../interfaces/slashInterface";
+import { PlayCommand } from "../commands/music/play.js";
+import { SearchCommand } from "../commands/music/search.js";
+import { SlashCommand } from "../interfaces/slashInterface.js";
 import { ChatInputCommandInteraction } from "discord.js";
 
 export class SlashHandler {

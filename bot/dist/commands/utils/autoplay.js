@@ -1,8 +1,6 @@
 import { QueueRepeatMode, useQueue } from "discord-player";
 export class AutoplayButtonCommand {
-    constructor() {
-        this.customId = "autoplay";
-    }
+    customId = "autoplay";
     async execute(interaction, player) {
         if (!interaction.deferred && !interaction.replied)
             await interaction.deferUpdate();

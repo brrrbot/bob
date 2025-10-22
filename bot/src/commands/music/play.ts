@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
-import { SlashCommand } from "../../interfaces/slashInterface";
+import { SlashCommand } from "../../interfaces/slashInterface.js";
 import { Player, QueryType, SearchQueryType } from "discord-player";
-import { buildEmbed } from "../build/embedBuilder";
+import { buildEmbed } from "../build/embedBuilder.js";
 import BotConfig from "../../config/config.json" with { type: "json" };
 
 export class PlayCommand implements SlashCommand {
@@ -34,6 +34,7 @@ export class PlayCommand implements SlashCommand {
         if (/radiko\.jp/.test(query)) searchEngine = `ext:radiko` as SearchQueryType;
 
         try {
+            // @ts-expect-error
             const { track, searchResult } = await player.play(channel, query, {
                 requestedBy: interaction.user,
                 searchEngine: searchEngine,

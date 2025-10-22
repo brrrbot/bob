@@ -8,6 +8,8 @@ import { ShuffleButtonCommand } from "../commands/utils/shuffle.js";
 import { SkipButtonCommand } from "../commands/utils/skip.js";
 import { StopButtonCommand } from "../commands/utils/stop.js";
 export class ButtonHandler {
+    commands;
+    player;
     constructor(playerInstance) {
         this.player = playerInstance;
         this.commands = new Map();

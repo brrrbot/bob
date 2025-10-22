@@ -1,11 +1,12 @@
-import { YoutubeiExtractor } from "discord-player-youtubei";
+// import { YoutubeiExtractor } from "discord-player-youtubei";
+import { YoutubeiExtractor } from "../../youtubeExtractor/youtubeExtractor.js";
 import BotConfig from "../../config/config.json" with { type: "json" };
 import { SpotifyExtractor } from "discord-player-spotify";
 import { RadikoExtractor } from "discord-player-radiko-v2";
-import { SlashCommand } from "../../interfaces/slashInterface";
+import { SlashCommand } from "../../interfaces/slashInterface.js";
 import { ActionRow, ActionRowBuilder, APIButtonComponent, APIStringSelectComponent, ButtonBuilder, ChatInputCommandInteraction, ComponentType, GuildMember, Interaction, Message, MessageActionRowComponent, SlashCommandBuilder, StringSelectMenuBuilder } from "discord.js";
 import { Player, SearchResult } from "discord-player";
-import { buildEmbed, buildSearchEmbed } from "../build/embedBuilder";
+import { buildEmbed, buildSearchEmbed } from "../build/embedBuilder.js";
 
 const extractorMap: Record<string, string> = {
     "Youtube": YoutubeiExtractor.identifier,
@@ -56,6 +57,7 @@ export class SearchCommand implements SlashCommand {
         let searchResult: SearchResult;
         try {
             searchResult = await player.search(query, {
+                // @ts-expect-error
                 requestedBy: interaction.user,
                 searchEngine: `ext:${searchEngine}`,
             });
@@ -66,8 +68,10 @@ export class SearchCommand implements SlashCommand {
 
         if (!searchResult || !searchResult.tracks.length) return void await interaction.followUp({ content: "No result found!", flags: "Ephemeral" });
 
+        // @ts-expect-error
         let queue = player.nodes.get(interaction.guild);
         if (!queue) {
+            // @ts-expect-error
             queue = await player.nodes.create(interaction.guild, {
                 metadata: interaction.channel,
                 ...BotConfig.discordPlayer.playerOptions,
@@ -75,6 +79,7 @@ export class SearchCommand implements SlashCommand {
         }
 
         try {
+            // @ts-expect-error
             if (!queue.connection) await queue.connect(channel);
         } catch (error) {
             console.error("Error joining voice channel: ", error);

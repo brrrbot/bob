@@ -1,9 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, GuildMember } from "discord.js";
 import { useQueue } from "discord-player";
 export class QueueButtonCommand {
-    constructor() {
-        this.customId = "queue";
-    }
+    customId = "queue";
     async execute(interaction, player) {
         if (!interaction.deferred && !interaction.replied)
             await interaction.deferUpdate();
@@ -47,7 +45,7 @@ export class QueueButtonCommand {
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(pageIndex === totalPages - 1));
         const msg = await interaction.followUp({ embeds: [buildEmbed(page)], components: [buildButtons(page)] });
-        const collector = msg.createMessageComponentCollector({ time: 60000, filter: i => i.user.id === interaction.user.id });
+        const collector = msg.createMessageComponentCollector({ time: 60_000, filter: i => i.user.id === interaction.user.id });
         collector.on("collect", async (btnInt) => {
             if (!btnInt.deferred && !btnInt.replied)
                 await btnInt.deferUpdate();

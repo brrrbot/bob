@@ -1,7 +1,8 @@
 import { Client, ClientOptions } from "discord.js";
 import { Player, onBeforeCreateStream } from "discord-player";
 import { SpotifyExtractor } from "discord-player-spotify";
-import { YoutubeiExtractor, YoutubeiOptions } from "discord-player-youtubei";
+// import { YoutubeiExtractor, YoutubeiOptions } from "discord-player-youtubei";
+import { YoutubeiExtractor } from "../youtubeExtractor/youtubeExtractor.js";
 import { RadikoExtractor } from "discord-player-radiko-v2";
 import { Log } from "youtubei.js";
 
@@ -24,6 +25,7 @@ export class PlayerClient extends Client {
     constructor(options: ClientOptions) {
         super(options);
 
+        // @ts-expect-error
         this.player = new Player(this, {
             skipFFmpeg: AppConfig.discordPlayer.skipFFmpeg,
             ffmpegPath: AppConfig.discordPlayer.ffmpegPath,
@@ -68,7 +70,7 @@ export class PlayerClient extends Client {
             try {
                 await this.player.extractors.register(
                     YoutubeiExtractor,
-                    this.getYoutubeiOptions(extractorsConfig.Youtubei) as YoutubeiOptions
+                    {}, // this.getYoutubeiOptions(extractorsConfig.Youtubei) as YoutubeiOptions,
                 );
                 console.log("Youtubei extractor registered.");
             } catch (error) {

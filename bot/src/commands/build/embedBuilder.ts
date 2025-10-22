@@ -2,7 +2,6 @@ import { ActionRowBuilder, ColorResolvable, EmbedBuilder, StringSelectMenuBuilde
 import { Track, Playlist, Player, SearchResult } from "discord-player";
 import colorsJson from "./colors.json" with { type: "json" };
 import botcolors from "./botDeco.json" with { type: "json" };
-import { buttons } from "./buttonBuilder.js";
 
 type ColorsType = Record<string, ColorResolvable>
 const colors = colorsJson as ColorsType;
@@ -30,7 +29,7 @@ export function buildEmbed(item: Track | Playlist) {
         })
         .setTitle(item.title)
         .setURL(item.url)
-        .setThumbnail(item.thumbnail)
+        .setThumbnail(item.thumbnail ?? null)
         .setFooter({
             text: "Stay Tuned!",
             iconURL: "https://cdn-icons-png.flaticon.com/128/19002/19002018.png",

@@ -5,6 +5,7 @@ import colorsJson from "../commands/build/colors.json" with { type: "json" };
 const botDeco = botcolors;
 const colors = colorsJson;
 export class MusicEventHandler {
+    player;
     constructor(playerInstance) {
         this.player = playerInstance;
     }

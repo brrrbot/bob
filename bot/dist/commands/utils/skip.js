@@ -1,9 +1,7 @@
 import { useQueue } from "discord-player";
 import { EmbedBuilder } from "discord.js";
 export class SkipButtonCommand {
-    constructor() {
-        this.customId = "skip";
-    }
+    customId = "skip";
     async execute(interaction, player) {
         if (!interaction.deferred && !interaction.replied)
             await interaction.deferUpdate();

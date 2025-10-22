@@ -1,7 +1,8 @@
 import { Client } from "discord.js";
 import { Player, onBeforeCreateStream } from "discord-player";
 import { SpotifyExtractor } from "discord-player-spotify";
-import { YoutubeiExtractor } from "discord-player-youtubei";
+// import { YoutubeiExtractor, YoutubeiOptions } from "discord-player-youtubei";
+import { YoutubeiExtractor } from "../youtubeExtractor/youtubeExtractor.js";
 import { RadikoExtractor } from "discord-player-radiko-v2";
 import { Log } from "youtubei.js";
 import AppConfig from "../config/config.json" with { type: "json" };
@@ -10,8 +11,14 @@ import { InteractionHandler } from "../controller/interaction.js";
 import { PlayerEventHandler } from "../error/errorEventHandler.js";
 import { MusicEventHandler } from "../controller/musicEvent.js";
 export class PlayerClient extends Client {
+    player;
+    interactionHandler;
+    playerEventHandler;
+    musicEventHandler;
+    activityHandler;
     constructor(options) {
         super(options);
+        // @ts-expect-error
         this.player = new Player(this, {
             skipFFmpeg: AppConfig.discordPlayer.skipFFmpeg,
             ffmpegPath: AppConfig.discordPlayer.ffmpegPath,
@@ -45,7 +52,7 @@ export class PlayerClient extends Client {
         const extractorsConfig = AppConfig.discordPlayer.extractors;
         if (extractorsConfig.Youtubei.enabled) {
             try {
-                await this.player.extractors.register(YoutubeiExtractor, this.getYoutubeiOptions(extractorsConfig.Youtubei));
+                await this.player.extractors.register(YoutubeiExtractor, {});
                 console.log("Youtubei extractor registered.");
             }
             catch (error) {

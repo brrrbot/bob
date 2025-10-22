@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import { REST, Routes, Client, GatewayIntentBits } from "discord.js";
 import { Player } from "discord-player";
-import { SlashHandler } from "../controller/slash";
+import { SlashHandler } from "../controller/slash.js";
 dotenv.config();
 const tokens = process.env.BOT_TOKENS?.split(',') || [];
 const clientIds = process.env.CLIENT_IDS?.split(',') || [];
@@ -16,6 +16,7 @@ if (tokens.length !== clientIds.length) {
 }
 (async () => {
     const dummyClient = new Client({ intents: [GatewayIntentBits.Guilds] });
+    // @ts-expect-error
     const player = new Player(dummyClient);
     const slashHandler = new SlashHandler(player);
     const commandData = slashHandler.getAllCommandData();

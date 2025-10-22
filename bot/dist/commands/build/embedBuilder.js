@@ -22,7 +22,7 @@ export function buildEmbed(item) {
     })
         .setTitle(item.title)
         .setURL(item.url)
-        .setThumbnail(item.thumbnail)
+        .setThumbnail(item.thumbnail ?? null)
         .setFooter({
         text: "Stay Tuned!",
         iconURL: "https://cdn-icons-png.flaticon.com/128/19002/19002018.png",
