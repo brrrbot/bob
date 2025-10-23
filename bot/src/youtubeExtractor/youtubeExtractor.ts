@@ -4,8 +4,8 @@ import { getInnertube } from "./getInnertube.js";
 import { createSabrStream } from "./createSabr.js";
 import { Readable } from "node:stream";
 
-export class YoutubeiExtractor extends BaseExtractor {
-    public static identifier: string = "youtubei";
+export class YoutubeSabrExtractor extends BaseExtractor {
+    public static identifier: string = "com.itsmaat.discord-player.youtube-sabr";
 
     private innertube: Innertube;
     private _stream: Function;
@@ -36,7 +36,6 @@ export class YoutubeiExtractor extends BaseExtractor {
     }
 
     async handle(query: string, context: ExtractorSearchContext): Promise<ExtractorInfo> {
-        console.log(`Input Query: ${query}`); // debugging line
         try {
             let isPlaylist: boolean = false;
             let playlistId: string | null = null;
@@ -53,9 +52,6 @@ export class YoutubeiExtractor extends BaseExtractor {
                 isPlaylist = !!m;
                 playlistId = m?.[1] ?? null;
             }
-
-            console.log(`isPlaylist?: ${isPlaylist}`); // debugging line
-            console.log(`playlistId: ${playlistId}`); // debugging line
 
             if (isPlaylist && playlistId) {
                 let playlist = await this.innertube.getPlaylist(playlistId);
@@ -80,8 +76,6 @@ export class YoutubeiExtractor extends BaseExtractor {
                             "UNKNOWN AUTHOR",
                     },
                     tracks: [],
-                    // @ts-ignore
-                    requestedBy: context.requestedBy ?? null,
                 });
 
                 dpPlaylist.tracks = [];
@@ -188,7 +182,6 @@ export class YoutubeiExtractor extends BaseExtractor {
             return nodeStream;
         } catch (error) {
             console.error(`[Youtubei Extractor Error] Error while creating stream: ${error}`);
-            throw error;
         }
     }
 
@@ -227,15 +220,6 @@ export class YoutubeiExtractor extends BaseExtractor {
         });
 
         return this.createResponse(null, trackConstruct);
-    }
-}
-
-function extractPlaylistId(url: string): string {
-    try {
-        const u = new URL(url);
-        return u.searchParams.get("list");
-    } catch {
-        return null;
     }
 }
 

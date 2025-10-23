@@ -29,7 +29,7 @@ function patchCanvasSupport(window: DOMWindow): void {
         value: null,
     });
 
-    HTMLCanvasElement.prototype.getContext = function getContext(type: string, options: string[]): any {
+    HTMLCanvasElement.prototype.getContext = (type: string, options: string[]): any => {
         if (type !== "2d") return null;
 
         const width = Number.isFinite(this.width) && this.width > 0 ? this.width : 300;
@@ -49,7 +49,7 @@ function patchCanvasSupport(window: DOMWindow): void {
         return state.context;
     }
 
-    HTMLCanvasElement.prototype.toDataURL = function toDataURL(...args: string[]): URL {
+    HTMLCanvasElement.prototype.toDataURL = (...args: string[]): URL => {
         if (!this._napiCanvasState?.canvas) {
             const width = Number.isFinite(this.width) && this.width > 0 ? this.width : 300;
             const height = Number.isFinite(this.height) && this.height > 0 ? this.height : 150;
@@ -129,7 +129,7 @@ function resetBotGuardState(): void {
     if (botguardClient?.shutdown) {
         try {
             botguardClient.shutdown();
-        } catch {
+        } finally {
             // No error output needed
         }
     }
@@ -223,7 +223,7 @@ async function initializeBotGuard(innertube: Innertube, { forceRefresh }: InitOp
 }
 
 function requireBinding(binding: string | undefined | null): string {
-    if (!binding) throw new Error("Content binding is required to mint a WebPo Token");
+    if (!binding) throw new Error("Content binding is required to mint a WebPoToken");
     return binding;
 }
 
@@ -242,24 +242,4 @@ export async function getWebPoMinter(innertube: Innertube, options = {}): Promis
 
 export function invalidateWebPoMinter(): void {
     resetBotGuardState();
-}
-
-export async function generateDataSyncTokens(innertube: Innertube): Promise<any> {
-    try {
-        const accountInfo = await innertube.account.getInfo();
-        const dataSyncId = accountInfo.contents.contents[0].endpoint.payload.supportedTokens[2].datasyncIdToken.datasyncIdToken;
-
-        if (!dataSyncId) throw new Error("Data Sync Id not found in Account Info.");
-
-        const minter = await getWebPoMinter(innertube);
-        const fullToken = await minter.mint(dataSyncId);
-
-        return {
-            dataSyncId,
-            fullToken,
-        };
-    } catch (error) {
-        console.error(`Error generating Data Sync Token: ${error}`);
-        throw error
-    }
 }

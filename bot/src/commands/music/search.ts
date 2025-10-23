@@ -1,5 +1,5 @@
 // import { YoutubeiExtractor } from "discord-player-youtubei";
-import { YoutubeiExtractor } from "../../youtubeExtractor/youtubeExtractor.js";
+import { YoutubeSabrExtractor } from "../../youtubeExtractor/youtubeExtractor.js";
 import BotConfig from "../../config/config.json" with { type: "json" };
 import { SpotifyExtractor } from "discord-player-spotify";
 import { RadikoExtractor } from "discord-player-radiko-v2";
@@ -9,7 +9,7 @@ import { Player, SearchResult } from "discord-player";
 import { buildEmbed, buildSearchEmbed } from "../build/embedBuilder.js";
 
 const extractorMap: Record<string, string> = {
-    "Youtube": YoutubeiExtractor.identifier,
+    "Youtube": YoutubeSabrExtractor.identifier,
     "Spotify": SpotifyExtractor.identifier,
     "Radiko": RadikoExtractor.identifier,
 };

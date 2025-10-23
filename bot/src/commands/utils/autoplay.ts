@@ -10,12 +10,8 @@ export class AutoplayButtonCommand implements buttonCommand {
 
         const queue = useQueue(interaction.guildId);
         if (!queue) return void await interaction.followUp({ content: "There is no queue in this server.", flags: "Ephemeral" });
-
-        if (queue.repeatMode === QueueRepeatMode.AUTOPLAY) {
-            queue.setRepeatMode(QueueRepeatMode.OFF);
-        } else {
-            queue.setRepeatMode(QueueRepeatMode.AUTOPLAY);
-        }
+        
+        queue.setRepeatMode(queue.repeatMode === QueueRepeatMode.AUTOPLAY ? QueueRepeatMode.OFF : QueueRepeatMode.AUTOPLAY);
 
         const content = `Autoplay has been ${queue.repeatMode === QueueRepeatMode.AUTOPLAY ? "enabled" : "disabled"}`; 
         await interaction.followUp({ content: content });

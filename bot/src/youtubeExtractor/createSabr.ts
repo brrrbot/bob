@@ -1,17 +1,16 @@
 import { SabrStream, SabrStreamConfig } from "googlevideo/sabr-stream";
 import { buildSabrFormat, EnabledTrackTypes } from "googlevideo/utils";
+import { AudioQuality } from "googlevideo/protos";
 import { Readable } from "node:stream";
 import { getInnertube } from "./getInnertube.js";
-import { getWebPoMinter, invalidateWebPoMinter, generateDataSyncTokens } from "./tokenGenerator.js";
+import { getWebPoMinter, invalidateWebPoMinter } from "./tokenGenerator.js";
 import { Constants, YTNodes } from "youtubei.js/agnostic";
 import { SabrFormat } from "googlevideo/shared-types";
 
 const DEFAULT_OPTIONS: any = {
-    audioQuality: "AUDIO_QUALITY_MEDIUM",
+    audioQuality: AudioQuality.HIGH,
     enabledTrackTypes: EnabledTrackTypes.AUDIO_ONLY
 }
-
-console.log("options: ", DEFAULT_OPTIONS); // debugging line
 
 function toNodeReadable(stream: any): Readable | null {
     if (!stream) return null;
@@ -42,7 +41,7 @@ export async function createSabrStream(videoId: string): Promise<Readable | null
     try {
         accountInfo = await innertube.account.getInfo();
     } catch (error) {
-        accountInfo = null;
+        throw error;
     }
     const dataSyncId = accountInfo?.contents?.contents[0]?.endpoint?.payload?.supportedTokens?.[2]?.datasyncIdToken?.datasyncIdToken ?? innertube.session.context.client.visitorData;
     const minter = await getWebPoMinter(innertube);
@@ -74,10 +73,6 @@ export async function createSabrStream(videoId: string): Promise<Readable | null
 
     const sabrFormats: SabrFormat[] = playerResponse.streaming_data?.adaptive_formats.map(buildSabrFormat) || [];
 
-    console.log("Server Adaptive Bitrate formats: ", sabrFormats); // debugging line
-    console.log("sabrStreamingUrl: ", serverAbrStreamingUrl); // debugging line
-    console.log("PoToken: ", poToken);
-
     const SabrStreamConfig: SabrStreamConfig = {
         formats: sabrFormats,
         serverAbrStreamingUrl,
@@ -88,7 +83,6 @@ export async function createSabrStream(videoId: string): Promise<Readable | null
             clientVersion: innertube.session.context.client.clientVersion,
         },
     }
-    console.log("SabrStreamConfig: ", SabrStreamConfig);
     const serverAbrStream = new SabrStream(SabrStreamConfig);
 
     let protectionFailureCount = 0;
@@ -120,12 +114,7 @@ export async function createSabrStream(videoId: string): Promise<Readable | null
     //     console.error("SABR stream error:", error);
     // });
 
-    console.log("SabrStream Obj: ", serverAbrStream); // debugging line
-
     const { audioStream } = await serverAbrStream.start(DEFAULT_OPTIONS);
-
-    console.log("SabrStream started!"); // debugging line
-
     const nodeStream = toNodeReadable(audioStream);
 
     return nodeStream;

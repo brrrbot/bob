@@ -2,7 +2,7 @@ import { Client, ClientOptions } from "discord.js";
 import { Player, onBeforeCreateStream } from "discord-player";
 import { SpotifyExtractor } from "discord-player-spotify";
 // import { YoutubeiExtractor, YoutubeiOptions } from "discord-player-youtubei";
-import { YoutubeiExtractor } from "../youtubeExtractor/youtubeExtractor.js";
+import { YoutubeSabrExtractor } from "../youtubeExtractor/youtubeExtractor.js";
 import { RadikoExtractor } from "discord-player-radiko-v2";
 import { Log } from "youtubei.js";
 
@@ -49,7 +49,7 @@ export class PlayerClient extends Client {
         onBeforeCreateStream(async (track: any, queryType, queue) => {
             try {
                 if (
-                    track.extractor?.identifier === YoutubeiExtractor.identifier ||
+                    track.extractor?.identifier === YoutubeSabrExtractor.identifier ||
                     track.extractor?.identifier === SpotifyExtractor.identifier ||
                     track.extractor?.identifier === RadikoExtractor.identifier
                 ) {
@@ -69,7 +69,7 @@ export class PlayerClient extends Client {
         if (extractorsConfig.Youtubei.enabled) {
             try {
                 await this.player.extractors.register(
-                    YoutubeiExtractor,
+                    YoutubeSabrExtractor,
                     {}, // this.getYoutubeiOptions(extractorsConfig.Youtubei) as YoutubeiOptions,
                 );
                 console.log("Youtubei extractor registered.");
