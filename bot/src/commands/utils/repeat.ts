@@ -1,7 +1,11 @@
 import { useQueue, QueueRepeatMode, Player } from "discord-player";
 import { ButtonInteraction } from "discord.js";
-import { buttonCommand } from "../../interfaces/buttonInterface.js";
+import type { buttonCommand } from "../../interfaces/buttonInterface.js";
 
+/**
+ * Toggle repeat song feature
+ * @implements {buttonCommand}
+ */
 export class RepeatButtonCommand implements buttonCommand {
     public readonly customId: string = "repeat";
 

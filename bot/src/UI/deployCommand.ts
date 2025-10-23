@@ -18,10 +18,9 @@ if (tokens.length !== clientIds.length) {
     process.exit(1);
 }
 
-(async () => {
+await (async () => {
     const dummyClient = new Client({ intents: [GatewayIntentBits.Guilds] });
-    // @ts-expect-error
-    const player = new Player(dummyClient);
+    const player = new Player(dummyClient as any);
 
     const slashHandler = new SlashHandler(player);
     const commandData = slashHandler.getAllCommandData();

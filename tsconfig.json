@@ -9,7 +9,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": false,
-    "baseUrl": ".",
+    "verbatimModuleSyntax": true,
   },
   "include": ["bot/src/**/*"]
 }

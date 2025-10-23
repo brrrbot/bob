@@ -1,12 +1,26 @@
 import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
-import { SlashCommand } from "../../interfaces/slashInterface.js";
-import { Player, QueryType, SearchQueryType } from "discord-player";
+import type { SlashCommand } from "../../interfaces/slashInterface.js";
+import { Player, QueryType } from "discord-player";
+import type { SearchQueryType } from "discord-player";
 import { buildEmbed } from "../build/embedBuilder.js";
 import BotConfig from "../../config/config.json" with { type: "json" };
 
+/**
+ * /play command functionality
+ * Handles searching and playing of music
+ * @implements {SlashCommand}
+ */
 export class PlayCommand implements SlashCommand {
+    /**
+     * Name of command
+     * @readonly
+     */
     public readonly commandName: string = "play";
 
+    /**
+     * Command's configuration and definition
+     * @readonly
+     */
     public readonly data = new SlashCommandBuilder()
     .setName("play")
     .setDescription("Plays a song/playlist or adds it to queue.")
@@ -16,6 +30,12 @@ export class PlayCommand implements SlashCommand {
         .setRequired(true)
     )
     
+    /**
+     * main logic
+     * @param interaction Discord /play interaction
+     * @param player Player instance
+     * @returns {Promise<void>}
+     */
     public async execute(interaction: ChatInputCommandInteraction, player: Player): Promise<void> {
         await interaction.deferReply();
 
@@ -34,9 +54,8 @@ export class PlayCommand implements SlashCommand {
         if (/radiko\.jp/.test(query)) searchEngine = `ext:radiko` as SearchQueryType;
 
         try {
-            // @ts-expect-error
-            const { track, searchResult } = await player.play(channel, query, {
-                requestedBy: interaction.user,
+            const { track, searchResult } = await player.play(channel as any, query, {
+                requestedBy: interaction.user as any,
                 searchEngine: searchEngine,
                 nodeOptions: {
                     metadata: interaction.channel,

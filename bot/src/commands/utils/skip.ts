@@ -1,7 +1,11 @@
 import { Player, useQueue } from "discord-player";
 import { ButtonInteraction, EmbedBuilder } from "discord.js";
-import { buttonCommand } from "../../interfaces/buttonInterface.js";
+import type { buttonCommand } from "../../interfaces/buttonInterface.js";
 
+/**
+ * Skip current song
+ * @implements {buttonCommand}
+ */
 export class SkipButtonCommand implements buttonCommand {
     public readonly customId: string = "skip";
 

@@ -1,9 +1,12 @@
 import { Player } from "discord-player";
 import { PlayCommand } from "../commands/music/play.js";
 import { SearchCommand } from "../commands/music/search.js";
-import { SlashCommand } from "../interfaces/slashInterface.js";
+import type { SlashCommand } from "../interfaces/slashInterface.js";
 import { ChatInputCommandInteraction } from "discord.js";
 
+/**
+ * Slash command handler
+ */
 export class SlashHandler {
     private commands: Map<string, SlashCommand>
     private player: Player;
@@ -26,10 +29,19 @@ export class SlashHandler {
         console.log(`Loaded ${this.commands.size} slash commands.`);
     }
 
+    /**
+     * Get data of all commands
+     * @returns Array of command data
+     */
     public getAllCommandData() {
         return Array.from(this.commands.values()).map(command => command.data.toJSON());
     }
 
+    /**
+     * Executes the slash command
+     * @param interaction Discord slash command interaction
+     * @returns {Promise<void>}
+     */
     public async handle(interaction: ChatInputCommandInteraction): Promise<void> {
         const command = this.commands.get(interaction.commandName);
 

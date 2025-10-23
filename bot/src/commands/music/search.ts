@@ -3,8 +3,9 @@ import { YoutubeSabrExtractor } from "../../youtubeExtractor/youtubeExtractor.js
 import BotConfig from "../../config/config.json" with { type: "json" };
 import { SpotifyExtractor } from "discord-player-spotify";
 import { RadikoExtractor } from "discord-player-radiko-v2";
-import { SlashCommand } from "../../interfaces/slashInterface.js";
-import { ActionRow, ActionRowBuilder, APIButtonComponent, APIStringSelectComponent, ButtonBuilder, ChatInputCommandInteraction, ComponentType, GuildMember, Interaction, Message, MessageActionRowComponent, SlashCommandBuilder, StringSelectMenuBuilder } from "discord.js";
+import type { SlashCommand } from "../../interfaces/slashInterface.js";
+import { ActionRow, ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, ComponentType, GuildMember, Message, SlashCommandBuilder, StringSelectMenuBuilder } from "discord.js";
+import type { APIButtonComponent, APIStringSelectComponent, Interaction, MessageActionRowComponent } from "discord.js";
 import { Player, SearchResult } from "discord-player";
 import { buildEmbed, buildSearchEmbed } from "../build/embedBuilder.js";
 
@@ -14,9 +15,22 @@ const extractorMap: Record<string, string> = {
     "Radiko": RadikoExtractor.identifier,
 };
 
+/**
+ * /search command functionality
+ * Handles searching of music and returning top 3 results for playing
+ * @implements {SlashCommand}
+ */
 export class SearchCommand implements SlashCommand {
+    /**
+     * Name of command
+     * @readonly
+     */
     public readonly commandName: string = "search";
 
+    /**
+     * Command's configuration and definition
+     * @readonly
+     */
     public readonly data = new SlashCommandBuilder()
         .setName("search")
         .setDescription("Searchs for song by name. (Playlist does not work, use /play instead.)")
@@ -36,6 +50,12 @@ export class SearchCommand implements SlashCommand {
                 .setRequired(true)
         )
 
+    /**
+     * main logic
+     * @param interaction Discord /search interaction
+     * @param player Player instance
+     * @returns {Promise<void>}
+     */
     public async execute(interaction: ChatInputCommandInteraction, player: Player): Promise<void> {
         await interaction.deferReply();
 
@@ -57,8 +77,7 @@ export class SearchCommand implements SlashCommand {
         let searchResult: SearchResult;
         try {
             searchResult = await player.search(query, {
-                // @ts-expect-error
-                requestedBy: interaction.user,
+                requestedBy: interaction.user as any,
                 searchEngine: `ext:${searchEngine}`,
             });
         } catch (error) {
@@ -68,19 +87,16 @@ export class SearchCommand implements SlashCommand {
 
         if (!searchResult || !searchResult.tracks.length) return void await interaction.followUp({ content: "No result found!", flags: "Ephemeral" });
 
-        // @ts-expect-error
-        let queue = player.nodes.get(interaction.guild);
+        let queue = player.nodes.get(interaction.guild as any);
         if (!queue) {
-            // @ts-expect-error
-            queue = await player.nodes.create(interaction.guild, {
+            queue = player.nodes.create(interaction.guild as any, {
                 metadata: interaction.channel,
                 ...BotConfig.discordPlayer.playerOptions,
             });
         }
 
         try {
-            // @ts-expect-error
-            if (!queue.connection) await queue.connect(channel);
+            if (!queue.connection) await queue.connect(channel as any);
         } catch (error) {
             console.error("Error joining voice channel: ", error);
             return void await interaction.followUp({ content: "Could not join voice channel.", flags: "Ephemeral" });

@@ -1,7 +1,11 @@
 import { Player, useQueue } from "discord-player";
 import { ButtonInteraction } from "discord.js";
-import { buttonCommand } from "../../interfaces/buttonInterface.js";
+import type { buttonCommand } from "../../interfaces/buttonInterface.js";
 
+/**
+ * Pause/Resume music player
+ * @implements {buttonCommand}
+ */
 export class PauseButtonCommand implements buttonCommand {
     public readonly customId: string = "pause";
 

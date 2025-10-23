@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { Innertube, UniversalCache, Platform } from "youtubei.js";
-import { Types } from "youtubei.js/web";
+import type { Types } from "youtubei.js/web";
 
 Platform.shim.eval = async (data: Types.BuildScriptResult, env: Record<string, Types.VMPrimative>) => {
   const properties = [];

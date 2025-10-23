@@ -1,11 +1,12 @@
-import { SabrStream, SabrStreamConfig } from "googlevideo/sabr-stream";
+import { SabrStream } from "googlevideo/sabr-stream";
+import type { SabrStreamConfig } from "googlevideo/sabr-stream";
 import { buildSabrFormat, EnabledTrackTypes } from "googlevideo/utils";
 import { AudioQuality } from "googlevideo/protos";
 import { Readable } from "node:stream";
 import { getInnertube } from "./getInnertube.js";
 import { getWebPoMinter, invalidateWebPoMinter } from "./tokenGenerator.js";
 import { Constants, YTNodes } from "youtubei.js/agnostic";
-import { SabrFormat } from "googlevideo/shared-types";
+import type { SabrFormat } from "googlevideo/shared-types";
 
 const DEFAULT_OPTIONS: any = {
     audioQuality: AudioQuality.HIGH,

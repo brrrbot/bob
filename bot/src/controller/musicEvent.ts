@@ -1,5 +1,6 @@
 import { Player, Track } from "discord-player";
-import { ColorResolvable, EmbedBuilder } from "discord.js";
+import { EmbedBuilder } from "discord.js";
+import type { ColorResolvable } from "discord.js";
 import { buttons } from "../commands/build/buttonBuilder.js";
 import botcolors from "../commands/build/botDeco.json" with { type: "json" };
 import colorsJson from "../commands/build/colors.json" with { type: "json" };
@@ -9,6 +10,9 @@ const botDeco = botcolors as BotDecoColors;
 type ColorsType = Record<string, ColorResolvable>;
 const colors = colorsJson as ColorsType;
 
+/**
+ * Class to handle events on player start
+ */
 export class MusicEventHandler {
     private player: Player;
 
@@ -16,6 +20,9 @@ export class MusicEventHandler {
         this.player = playerInstance;
     }
 
+    /**
+     * Register player start event handler
+     */
     public register() {
         this.player.events.on("playerStart", this.onPlayerStart.bind(this));
     }

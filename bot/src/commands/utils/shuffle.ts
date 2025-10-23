@@ -1,7 +1,11 @@
 import { Player, useQueue } from "discord-player";
 import { ButtonInteraction } from "discord.js";
-import { buttonCommand } from "../../interfaces/buttonInterface.js";
+import type { buttonCommand } from "../../interfaces/buttonInterface.js";
 
+/**
+ * Toggle shuffling feature
+ * @implements {buttonCommand}
+ */
 export class ShuffleButtonCommand implements buttonCommand {
     public readonly customId: string = "shuffle";
 

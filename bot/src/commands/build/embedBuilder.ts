@@ -1,18 +1,15 @@
-import { ActionRowBuilder, ColorResolvable, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
-import { Track, Playlist, Player, SearchResult } from "discord-player";
+import { ActionRowBuilder, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
+import type { ColorResolvable, InteractionReplyOptions } from "discord.js";
+import { Track, Playlist, SearchResult } from "discord-player";
 import colorsJson from "./colors.json" with { type: "json" };
-import botcolors from "./botDeco.json" with { type: "json" };
 
 type ColorsType = Record<string, ColorResolvable>
 const colors = colorsJson as ColorsType;
 
-type BotDecoColors = Record<string, {color: ColorResolvable; thumbnail: string}>;
-const botDeco = botcolors as BotDecoColors;
-
 /**
- * Creates embed for when song/playlist is added into queue
- * @param item Either searchResult.tracks[n] or searchResult.playlist.tracks
- * @returns embed value to be passed into "embeds:" in discord interaction replies
+ * Build embed with video info
+ * @param item Track or Playlist
+ * @returns Discord embed object
  */
 export function buildEmbed(item: Track | Playlist) {
     const isPlaylist = "tracks" in item;
@@ -52,12 +49,12 @@ export function buildEmbed(item: Track | Playlist) {
 }
 
 /**
- * Creates an embed based on user's query along with song select menu
- * @param searchResult Search Results from /search command
- * @param source Platform where song/playlist is extracted from for color picking
- * @returns object with search result embed and user select menu
+ * Build search embed
+ * @param searchResult Search Result from discord-player search
+ * @param source Source where music is from
+ * @returns Search embed with select menu
  */
-export function buildSearchEmbed(searchResult: SearchResult, source: string) {
+export function buildSearchEmbed(searchResult: SearchResult, source: string): InteractionReplyOptions {
     const tracks = searchResult.tracks.slice(0, 3);
     const color = colors[source.toLocaleLowerCase()] ?? 0x5865f2;
 

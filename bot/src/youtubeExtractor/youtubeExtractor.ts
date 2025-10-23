@@ -1,11 +1,12 @@
-import { BaseExtractor, ExtractorInfo, ExtractorSearchContext, ExtractorStreamable, GuildQueueHistory, Playlist, SearchQueryType, Track, Util } from "discord-player";
+import { BaseExtractor, GuildQueueHistory, Playlist, Track, Util } from "discord-player";
+import type { ExtractorInfo, ExtractorSearchContext, ExtractorStreamable, SearchQueryType } from "discord-player";
 import { Innertube, YTNodes } from "youtubei.js/agnostic";
 import { getInnertube } from "./getInnertube.js";
 import { createSabrStream } from "./createSabr.js";
 import { Readable } from "node:stream";
 
 export class YoutubeSabrExtractor extends BaseExtractor {
-    public static identifier: string = "com.itsmaat.discord-player.youtube-sabr";
+    public static identifier: string = "com.brrrbot.discord-player.youtube-sabr";
 
     private innertube: Innertube;
     private _stream: Function;

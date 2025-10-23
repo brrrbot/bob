@@ -1,4 +1,5 @@
-import { Client, ClientOptions } from "discord.js";
+import { Client } from "discord.js";
+import type { ClientOptions } from "discord.js";
 import { Player, onBeforeCreateStream } from "discord-player";
 import { SpotifyExtractor } from "discord-player-spotify";
 // import { YoutubeiExtractor, YoutubeiOptions } from "discord-player-youtubei";
@@ -15,6 +16,9 @@ import { MusicEventHandler } from "../controller/musicEvent.js"
 
 type ExtractorsConfig = typeof AppConfig.discordPlayer.extractors;
 
+/**
+ * Discord Player client
+ */
 export class PlayerClient extends Client {
     public player: Player;
     public interactionHandler: InteractionHandler;
@@ -25,8 +29,7 @@ export class PlayerClient extends Client {
     constructor(options: ClientOptions) {
         super(options);
 
-        // @ts-expect-error
-        this.player = new Player(this, {
+        this.player = new Player(this as any, {
             skipFFmpeg: AppConfig.discordPlayer.skipFFmpeg,
             ffmpegPath: AppConfig.discordPlayer.ffmpegPath,
         });

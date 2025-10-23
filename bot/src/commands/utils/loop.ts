@@ -1,7 +1,11 @@
 import { useQueue, QueueRepeatMode, Player } from "discord-player";
 import { ButtonInteraction } from "discord.js";
-import { buttonCommand } from "../../interfaces/buttonInterface.js";
+import type { buttonCommand } from "../../interfaces/buttonInterface.js";
 
+/**
+ * Toggle loop feature
+ * @implements {buttonCommand}
+ */
 export class LoopButtonCommand implements buttonCommand {
     public readonly customId: string = "loop";
     

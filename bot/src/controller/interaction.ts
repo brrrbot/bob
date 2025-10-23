@@ -1,8 +1,12 @@
-import { Client, GuildMember, ChatInputCommandInteraction, ButtonInteraction, Interaction } from "discord.js";
+import { Client, GuildMember, ChatInputCommandInteraction, ButtonInteraction } from "discord.js";
+import type { Interaction } from "discord.js";
 import { Player } from "discord-player";
 import { SlashHandler } from "./slash.js";
 import { ButtonHandler } from "./buttons.js";
 
+/**
+ * Calls handler based on interaction type
+ */
 export class InteractionHandler {
     private client: Client;
     private player: Player;
@@ -16,6 +20,9 @@ export class InteractionHandler {
         this.slashHandler = new SlashHandler(player);
     }
 
+    /**
+     * Register commands
+     */
     public register() {
         this.client.on("interactionCreate", this.onInteractionCreate.bind(this));
     }

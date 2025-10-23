@@ -1,10 +1,24 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, GuildMember, Message } from "discord.js";
-import { buttonCommand } from "../../interfaces/buttonInterface.js";
+import type { buttonCommand } from "../../interfaces/buttonInterface.js";
 import { Player, useQueue } from "discord-player";
 
+/**
+ * View queue command feature
+ * @implements {buttonCommand}
+ */
 export class QueueButtonCommand implements buttonCommand {
+    /**
+     * Command Id
+     * @readonly
+     */
     public readonly customId: string = "queue";
 
+    /**
+     * Display queue with pagination
+     * @param interaction Discord button interaction with queue button
+     * @param player Player instance
+     * @returns {Promise<void>}
+     */
     public async execute(interaction: ButtonInteraction, player: Player): Promise<void> {
         if (!interaction.deferred && !interaction.replied) await interaction.deferUpdate();
 
