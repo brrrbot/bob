@@ -1,5 +1,4 @@
 import { Client } from "discord.js";
-import type { ClientOptions } from "discord.js";
 import { Player, onBeforeCreateStream } from "discord-player";
 import { SpotifyExtractor } from "discord-player-spotify";
 // import { YoutubeiExtractor } from "discord-player-youtubei";
@@ -7,114 +6,92 @@ import { SpotifyExtractor } from "discord-player-spotify";
 import { YoutubeSabrExtractor } from "../youtubeExtractor/youtubeExtractor.js";
 import { RadikoExtractor } from "discord-player-radiko-v2";
 import { Log } from "youtubei.js";
-
 import AppConfig from "../config/config.json" with { type: "json" };
-
 import { ClientActivityHandler } from "./activity.js";
-import { InteractionHandler } from "../controller/interaction.js"
-import { PlayerEventHandler } from "../error/errorEventHandler.js"
-import { MusicEventHandler } from "../controller/musicEvent.js"
+import { InteractionHandler } from "../controller/interaction.js";
+import { PlayerEventHandler } from "../error/errorEventHandler.js";
+import { MusicEventHandler } from "../controller/musicEvent.js";
 import { YoutubeiExtractor } from "discord-player-youtubei";
-
-type ExtractorsConfig = typeof AppConfig.discordPlayer.extractors;
-
 /**
  * Discord Player client
  */
 export class PlayerClient extends Client {
-    public player: Player;
-    public interactionHandler: InteractionHandler;
-    public playerEventHandler: PlayerEventHandler;
-    public musicEventHandler: MusicEventHandler;
-    public activityHandler: ClientActivityHandler;
-
-    constructor(options: ClientOptions) {
+    player;
+    interactionHandler;
+    playerEventHandler;
+    musicEventHandler;
+    activityHandler;
+    constructor(options) {
         super(options);
-
-        this.player = new Player(this as any, {
+        this.player = new Player(this, {
             skipFFmpeg: AppConfig.discordPlayer.skipFFmpeg,
             ffmpegPath: AppConfig.discordPlayer.ffmpegPath,
         });
-
         this.setupPlayerHooks();
-
         this.registerPlayerExtractors();
-
         this.interactionHandler = new InteractionHandler(this, this.player);
         this.playerEventHandler = new PlayerEventHandler(this.player);
         this.musicEventHandler = new MusicEventHandler(this.player);
         this.activityHandler = new ClientActivityHandler(this);
-
         this.registerAllEventHandlers();
-
         Log.setLevel(Log.Level.NONE);
     }
-
-    private setupPlayerHooks() {
-        onBeforeCreateStream(async (track: any, queryType, queue) => {
+    setupPlayerHooks() {
+        onBeforeCreateStream(async (track, queryType, queue) => {
             try {
-                if (
-                    track.extractor?.identifier === YoutubeSabrExtractor.identifier ||
+                if (track.extractor?.identifier === YoutubeSabrExtractor.identifier ||
                     track.extractor?.identifier === SpotifyExtractor.identifier ||
-                    track.extractor?.identifier === RadikoExtractor.identifier
-                ) {
+                    track.extractor?.identifier === RadikoExtractor.identifier) {
                     return await track.extractor?.stream(track);
                 }
                 return undefined;
-            } catch (error) {
+            }
+            catch (error) {
                 console.error("Stream creation error:", error);
                 return undefined;
             }
         });
     }
-
-    private async registerPlayerExtractors() {
+    async registerPlayerExtractors() {
         const extractorsConfig = AppConfig.discordPlayer.extractors;
-
         if (extractorsConfig.Youtubei.enabled) {
             try {
-                await this.player.extractors.register(
-                    YoutubeiExtractor,
-                    {}, //this.getYoutubeiOptions(extractorsConfig.Youtubei) as YoutubeiOptions,
-                );
+                await this.player.extractors.register(YoutubeiExtractor, {});
                 console.log("Youtubei extractor registered.");
-            } catch (error) {
+            }
+            catch (error) {
                 console.error("Failed to register Youtubei extractor:", error);
             }
         }
-
         if (extractorsConfig.YoutubeSabr.enabled) {
             try {
                 await this.player.extractors.register(YoutubeSabrExtractor, {});
                 console.log("YoutubeSabr extractor registered.");
-            } catch (error) {
+            }
+            catch (error) {
                 console.error("Failed to register YoutubeSabr extractor: ", error);
             }
         }
-
         if (extractorsConfig.Spotify.enabled) {
             try {
-                await this.player.extractors.register(
-                    SpotifyExtractor,
-                    this.getSpotifyOptions(extractorsConfig.Spotify),
-                );
+                await this.player.extractors.register(SpotifyExtractor, this.getSpotifyOptions(extractorsConfig.Spotify));
                 console.log("Spotify extractor registered.");
-            } catch (error) {
+            }
+            catch (error) {
                 console.error("Failed to register Spotify extractor:", error);
             }
         }
-
         if (extractorsConfig.Radiko.enabled) {
             try {
                 await this.player.extractors.register(RadikoExtractor, {});
                 console.log("Radiko extractor registered.");
-            } catch (error) {
+            }
+            catch (error) {
                 console.error("Failed to register Radiko extractor:", error);
             }
         }
     }
-
-    private getYoutubeiOptions(youtubeiConfig: ExtractorsConfig['Youtubei']) {
+    getYoutubeiOptions(youtubeiConfig) {
         return {
             streamOptions: {
                 useClient: youtubeiConfig.config.client,
@@ -124,29 +101,25 @@ export class PlayerClient extends Client {
             generateWithPoToken: youtubeiConfig.config.potokens,
         };
     }
-
-    private getSpotifyOptions(spotifyConfig: ExtractorsConfig['Spotify']) {
-        if (!spotifyConfig.config.useAccount) return {};
-
+    getSpotifyOptions(spotifyConfig) {
+        if (!spotifyConfig.config.useAccount)
+            return {};
         if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
             console.warn("Spotify credentials (SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET) are not set in .env. Spotify extractor might not function correctly.");
             return {};
         }
-
         return {
             clientId: process.env.SPOTIFY_CLIENT_ID,
             clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
         };
     }
-
-    private registerAllEventHandlers() {
+    registerAllEventHandlers() {
         this.interactionHandler.register();
         this.playerEventHandler.register();
         this.musicEventHandler.register();
         this.activityHandler.register();
     }
-
-    public async start(token: string) {
+    async start(token) {
         await this.login(token);
     }
 }

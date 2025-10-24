@@ -68,7 +68,7 @@
             },
             "Radiko": {
                 "enabled": false,
-                "priority":1,
+                "priority": 1,
                 "config": {}
             }
         },
