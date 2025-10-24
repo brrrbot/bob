@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import { REST, Routes, Client, GatewayIntentBits } from "discord.js";
 import { Player } from "discord-player";
-import { SlashHandler } from "../controller/slash";
+import { SlashHandler } from "../controller/slash.js";
 dotenv.config();
 const tokens = process.env.BOT_TOKENS?.split(',') || [];
 const clientIds = process.env.CLIENT_IDS?.split(',') || [];
@@ -14,7 +14,7 @@ if (tokens.length !== clientIds.length) {
     console.error("Error: The number of BOT_TOKENS does not match the number of CLIENT_IDS.");
     process.exit(1);
 }
-(async () => {
+await (async () => {
     const dummyClient = new Client({ intents: [GatewayIntentBits.Guilds] });
     const player = new Player(dummyClient);
     const slashHandler = new SlashHandler(player);

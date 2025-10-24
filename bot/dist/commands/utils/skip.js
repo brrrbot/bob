@@ -1,9 +1,11 @@
 import { useQueue } from "discord-player";
 import { EmbedBuilder } from "discord.js";
+/**
+ * Skip current song
+ * @implements {buttonCommand}
+ */
 export class SkipButtonCommand {
-    constructor() {
-        this.customId = "skip";
-    }
+    customId = "skip";
     async execute(interaction, player) {
         if (!interaction.deferred && !interaction.replied)
             await interaction.deferUpdate();

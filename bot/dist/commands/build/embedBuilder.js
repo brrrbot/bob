@@ -1,12 +1,10 @@
 import { ActionRowBuilder, EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import colorsJson from "./colors.json" with { type: "json" };
-import botcolors from "./botDeco.json" with { type: "json" };
 const colors = colorsJson;
-const botDeco = botcolors;
 /**
- * Creates embed for when song/playlist is added into queue
- * @param item Either searchResult.tracks[n] or searchResult.playlist.tracks
- * @returns embed value to be passed into "embeds:" in discord interaction replies
+ * Build embed with video info
+ * @param item Track or Playlist
+ * @returns Discord embed object
  */
 export function buildEmbed(item) {
     const isPlaylist = "tracks" in item;
@@ -22,7 +20,7 @@ export function buildEmbed(item) {
     })
         .setTitle(item.title)
         .setURL(item.url)
-        .setThumbnail(item.thumbnail)
+        .setThumbnail(item.thumbnail ?? null)
         .setFooter({
         text: "Stay Tuned!",
         iconURL: "https://cdn-icons-png.flaticon.com/128/19002/19002018.png",
@@ -36,10 +34,10 @@ export function buildEmbed(item) {
     return embed;
 }
 /**
- * Creates an embed based on user's query along with song select menu
- * @param searchResult Search Results from /search command
- * @param source Platform where song/playlist is extracted from for color picking
- * @returns object with search result embed and user select menu
+ * Build search embed
+ * @param searchResult Search Result from discord-player search
+ * @param source Source where music is from
+ * @returns Search embed with select menu
  */
 export function buildSearchEmbed(searchResult, source) {
     const tracks = searchResult.tracks.slice(0, 3);

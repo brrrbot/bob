@@ -4,10 +4,17 @@ import botcolors from "../commands/build/botDeco.json" with { type: "json" };
 import colorsJson from "../commands/build/colors.json" with { type: "json" };
 const botDeco = botcolors;
 const colors = colorsJson;
+/**
+ * Class to handle events on player start
+ */
 export class MusicEventHandler {
+    player;
     constructor(playerInstance) {
         this.player = playerInstance;
     }
+    /**
+     * Register player start event handler
+     */
     register() {
         this.player.events.on("playerStart", this.onPlayerStart.bind(this));
     }

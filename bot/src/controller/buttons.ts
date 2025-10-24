@@ -1,6 +1,6 @@
 import { ButtonInteraction } from "discord.js";
 import { Player } from "discord-player";
-import { buttonCommand } from "../interfaces/buttonInterface.js";
+import type { buttonCommand } from "../interfaces/buttonInterface.js";
 
 import { AutoplayButtonCommand } from "../commands/utils/autoplay.js";
 import { LoopButtonCommand } from "../commands/utils/loop.js";
@@ -12,6 +12,9 @@ import { ShuffleButtonCommand } from "../commands/utils/shuffle.js";
 import { SkipButtonCommand } from "../commands/utils/skip.js";
 import { StopButtonCommand } from "../commands/utils/stop.js";
 
+/**
+ * Button command handler
+ */
 export class ButtonHandler {
     private commands: Map<string, buttonCommand>;
     private player: Player;
@@ -42,6 +45,10 @@ export class ButtonHandler {
         console.log(`Loaded ${this.commands.size} button commands`);
     }
 
+    /**
+     * Executes the interacted button command
+     * @param interaction Discord button interaction
+     */
     public async handle(interaction: ButtonInteraction): Promise<void> {
         const command = this.commands.get(interaction.customId);
 

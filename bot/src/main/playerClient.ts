@@ -1,7 +1,10 @@
-import { Client, ClientOptions } from "discord.js";
+import { Client } from "discord.js";
+import type { ClientOptions } from "discord.js";
 import { Player, onBeforeCreateStream } from "discord-player";
 import { SpotifyExtractor } from "discord-player-spotify";
-import { YoutubeiExtractor, YoutubeiOptions } from "discord-player-youtubei";
+// import { YoutubeiExtractor } from "discord-player-youtubei";
+// import type { YoutubeiOptions } from "discord-player-youtubei";
+import { YoutubeSabrExtractor } from "../youtubeExtractor/youtubeExtractor.js";
 import { RadikoExtractor } from "discord-player-radiko-v2";
 import { Log } from "youtubei.js";
 
@@ -11,9 +14,13 @@ import { ClientActivityHandler } from "./activity.js";
 import { InteractionHandler } from "../controller/interaction.js"
 import { PlayerEventHandler } from "../error/errorEventHandler.js"
 import { MusicEventHandler } from "../controller/musicEvent.js"
+import { YoutubeiExtractor } from "discord-player-youtubei";
 
 type ExtractorsConfig = typeof AppConfig.discordPlayer.extractors;
 
+/**
+ * Discord Player client
+ */
 export class PlayerClient extends Client {
     public player: Player;
     public interactionHandler: InteractionHandler;
@@ -24,7 +31,7 @@ export class PlayerClient extends Client {
     constructor(options: ClientOptions) {
         super(options);
 
-        this.player = new Player(this, {
+        this.player = new Player(this as any, {
             skipFFmpeg: AppConfig.discordPlayer.skipFFmpeg,
             ffmpegPath: AppConfig.discordPlayer.ffmpegPath,
         });
@@ -47,7 +54,7 @@ export class PlayerClient extends Client {
         onBeforeCreateStream(async (track: any, queryType, queue) => {
             try {
                 if (
-                    track.extractor?.identifier === YoutubeiExtractor.identifier ||
+                    track.extractor?.identifier === YoutubeSabrExtractor.identifier ||
                     track.extractor?.identifier === SpotifyExtractor.identifier ||
                     track.extractor?.identifier === RadikoExtractor.identifier
                 ) {
@@ -68,7 +75,7 @@ export class PlayerClient extends Client {
             try {
                 await this.player.extractors.register(
                     YoutubeiExtractor,
-                    this.getYoutubeiOptions(extractorsConfig.Youtubei) as YoutubeiOptions
+                    {}, //this.getYoutubeiOptions(extractorsConfig.Youtubei) as YoutubeiOptions,
                 );
                 console.log("Youtubei extractor registered.");
             } catch (error) {
@@ -76,11 +83,20 @@ export class PlayerClient extends Client {
             }
         }
 
+        if (extractorsConfig.YoutubeSabr.enabled) {
+            try {
+                await this.player.extractors.register(YoutubeSabrExtractor, {});
+                console.log("YoutubeSabr extractor registered.");
+            } catch (error) {
+                console.error("Failed to register YoutubeSabr extractor: ", error);
+            }
+        }
+
         if (extractorsConfig.Spotify.enabled) {
             try {
                 await this.player.extractors.register(
                     SpotifyExtractor,
-                    this.getSpotifyOptions(extractorsConfig.Spotify)
+                    this.getSpotifyOptions(extractorsConfig.Spotify),
                 );
                 console.log("Spotify extractor registered.");
             } catch (error) {

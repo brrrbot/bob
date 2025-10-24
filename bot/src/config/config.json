@@ -35,7 +35,7 @@
                 }
             },
             "Youtubei": {
-                "enabled": true,
+                "enabled": false,
                 "priority": 5,
                 "config": {
                     "client": "WEB_EMBEDDED",
@@ -44,6 +44,10 @@
                     "potokens": true,
                     "useCookie": false
                 }
+            },
+            "YoutubeSabr": {
+                "enabled": true,
+                "priority": 5
             },
             "SoundCloud": {
                 "enabled": false,
@@ -63,7 +67,7 @@
                 "config": {}
             },
             "Radiko": {
-                "enabled": true,
+                "enabled": false,
                 "priority":1,
                 "config": {}
             }

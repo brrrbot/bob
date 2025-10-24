@@ -1,6 +1,11 @@
-import { PlayCommand } from "../commands/music/play";
-import { SearchCommand } from "../commands/music/search";
+import { PlayCommand } from "../commands/music/play.js";
+import { SearchCommand } from "../commands/music/search.js";
+/**
+ * Slash command handler
+ */
 export class SlashHandler {
+    commands;
+    player;
     constructor(playerInstance) {
         this.player = playerInstance;
         this.commands = new Map();
@@ -16,9 +21,18 @@ export class SlashHandler {
         }
         console.log(`Loaded ${this.commands.size} slash commands.`);
     }
+    /**
+     * Get data of all commands
+     * @returns Array of command data
+     */
     getAllCommandData() {
         return Array.from(this.commands.values()).map(command => command.data.toJSON());
     }
+    /**
+     * Executes the slash command
+     * @param interaction Discord slash command interaction
+     * @returns {Promise<void>}
+     */
     async handle(interaction) {
         const command = this.commands.get(interaction.commandName);
         if (!command) {

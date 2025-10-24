@@ -1,7 +1,9 @@
 import { Client } from "discord.js";
 import { Player, onBeforeCreateStream } from "discord-player";
 import { SpotifyExtractor } from "discord-player-spotify";
-import { YoutubeiExtractor } from "discord-player-youtubei";
+// import { YoutubeiExtractor } from "discord-player-youtubei";
+// import type { YoutubeiOptions } from "discord-player-youtubei";
+import { YoutubeSabrExtractor } from "../youtubeExtractor/youtubeExtractor.js";
 import { RadikoExtractor } from "discord-player-radiko-v2";
 import { Log } from "youtubei.js";
 import AppConfig from "../config/config.json" with { type: "json" };
@@ -9,7 +11,16 @@ import { ClientActivityHandler } from "./activity.js";
 import { InteractionHandler } from "../controller/interaction.js";
 import { PlayerEventHandler } from "../error/errorEventHandler.js";
 import { MusicEventHandler } from "../controller/musicEvent.js";
+import { YoutubeiExtractor } from "discord-player-youtubei";
+/**
+ * Discord Player client
+ */
 export class PlayerClient extends Client {
+    player;
+    interactionHandler;
+    playerEventHandler;
+    musicEventHandler;
+    activityHandler;
     constructor(options) {
         super(options);
         this.player = new Player(this, {
@@ -28,7 +39,7 @@ export class PlayerClient extends Client {
     setupPlayerHooks() {
         onBeforeCreateStream(async (track, queryType, queue) => {
             try {
-                if (track.extractor?.identifier === YoutubeiExtractor.identifier ||
+                if (track.extractor?.identifier === YoutubeSabrExtractor.identifier ||
                     track.extractor?.identifier === SpotifyExtractor.identifier ||
                     track.extractor?.identifier === RadikoExtractor.identifier) {
                     return await track.extractor?.stream(track);
@@ -45,11 +56,20 @@ export class PlayerClient extends Client {
         const extractorsConfig = AppConfig.discordPlayer.extractors;
         if (extractorsConfig.Youtubei.enabled) {
             try {
-                await this.player.extractors.register(YoutubeiExtractor, this.getYoutubeiOptions(extractorsConfig.Youtubei));
+                await this.player.extractors.register(YoutubeiExtractor, {});
                 console.log("Youtubei extractor registered.");
             }
             catch (error) {
                 console.error("Failed to register Youtubei extractor:", error);
+            }
+        }
+        if (extractorsConfig.YoutubeSabr.enabled) {
+            try {
+                await this.player.extractors.register(YoutubeSabrExtractor, {});
+                console.log("YoutubeSabr extractor registered.");
+            }
+            catch (error) {
+                console.error("Failed to register YoutubeSabr extractor: ", error);
             }
         }
         if (extractorsConfig.Spotify.enabled) {

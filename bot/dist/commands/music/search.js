@@ -1,28 +1,45 @@
-import { YoutubeiExtractor } from "discord-player-youtubei";
+import { YoutubeSabrExtractor } from "../../youtubeExtractor/youtubeExtractor.js";
 import BotConfig from "../../config/config.json" with { type: "json" };
 import { SpotifyExtractor } from "discord-player-spotify";
 import { RadikoExtractor } from "discord-player-radiko-v2";
 import { ActionRowBuilder, ButtonBuilder, ComponentType, GuildMember, SlashCommandBuilder, StringSelectMenuBuilder } from "discord.js";
-import { buildEmbed, buildSearchEmbed } from "../build/embedBuilder";
+import { buildEmbed, buildSearchEmbed } from "../build/embedBuilder.js";
 const extractorMap = {
-    "Youtube": YoutubeiExtractor.identifier,
+    "Youtube": YoutubeSabrExtractor.identifier,
     "Spotify": SpotifyExtractor.identifier,
     "Radiko": RadikoExtractor.identifier,
 };
+/**
+ * /search command functionality
+ * Handles searching of music and returning top 3 results for playing
+ * @implements {SlashCommand}
+ */
 export class SearchCommand {
-    constructor() {
-        this.commandName = "search";
-        this.data = new SlashCommandBuilder()
-            .setName("search")
-            .setDescription("Searchs for song by name. (Playlist does not work, use /play instead.)")
-            .addStringOption(option => option.setName("source")
-            .setDescription("Specify the source to search from.")
-            .setRequired(true)
-            .addChoices({ name: "Youtube", value: "Youtube" }, { name: "Spotify", value: "Spotify" }, { name: "Radiko", value: "Radiko" }))
-            .addStringOption(option => option.setName("query")
-            .setDescription("Song name to search for.")
-            .setRequired(true));
-    }
+    /**
+     * Name of command
+     * @readonly
+     */
+    commandName = "search";
+    /**
+     * Command's configuration and definition
+     * @readonly
+     */
+    data = new SlashCommandBuilder()
+        .setName("search")
+        .setDescription("Searchs for song by name. (Playlist does not work, use /play instead.)")
+        .addStringOption(option => option.setName("source")
+        .setDescription("Specify the source to search from.")
+        .setRequired(true)
+        .addChoices({ name: "Youtube", value: "Youtube" }, { name: "Spotify", value: "Spotify" }, { name: "Radiko", value: "Radiko" }))
+        .addStringOption(option => option.setName("query")
+        .setDescription("Song name to search for.")
+        .setRequired(true));
+    /**
+     * main logic
+     * @param interaction Discord /search interaction
+     * @param player Player instance
+     * @returns {Promise<void>}
+     */
     async execute(interaction, player) {
         await interaction.deferReply();
         const query = interaction.options.getString("query", true);
@@ -54,7 +71,7 @@ export class SearchCommand {
             return void await interaction.followUp({ content: "No result found!", flags: "Ephemeral" });
         let queue = player.nodes.get(interaction.guild);
         if (!queue) {
-            queue = await player.nodes.create(interaction.guild, {
+            queue = player.nodes.create(interaction.guild, {
                 metadata: interaction.channel,
                 ...BotConfig.discordPlayer.playerOptions,
             });
@@ -78,7 +95,7 @@ export class SearchCommand {
         const filter = (i) => i.user.id === interaction.user.id && i.customId === "selectedTrack";
         let selectedInteraction;
         try {
-            selectedInteraction = await reply.awaitMessageComponent({ filter, componentType: ComponentType.StringSelect, time: 60000 });
+            selectedInteraction = await reply.awaitMessageComponent({ filter, componentType: ComponentType.StringSelect, time: 60_000 });
             await selectedInteraction.deferUpdate();
             const trackURL = selectedInteraction.values[0];
             const track = searchResult.tracks.find(t => t.url === trackURL);

@@ -1,4 +1,8 @@
+/**
+ * Event handler for errors
+ */
 export class PlayerEventHandler {
+    player;
     constructor(player) {
         this.player = player;
     }

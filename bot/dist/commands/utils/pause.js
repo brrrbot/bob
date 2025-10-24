@@ -1,8 +1,10 @@
 import { useQueue } from "discord-player";
+/**
+ * Pause/Resume music player
+ * @implements {buttonCommand}
+ */
 export class PauseButtonCommand {
-    constructor() {
-        this.customId = "pause";
-    }
+    customId = "pause";
     async execute(interaction, player) {
         if (!interaction.deferred && !interaction.replied)
             await interaction.deferUpdate();

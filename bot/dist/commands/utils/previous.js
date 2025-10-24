@@ -1,8 +1,10 @@
 import { useQueue } from "discord-player";
+/**
+ * Plays the previous song
+ * @implements {buttonCommand}
+ */
 export class PreviousButtonCommand {
-    constructor() {
-        this.customId = "prev";
-    }
+    customId = "prev";
     async execute(interaction, player) {
         if (!interaction.deferred && !interaction.replied)
             await interaction.deferUpdate();

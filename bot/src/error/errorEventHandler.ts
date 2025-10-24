@@ -1,5 +1,8 @@
 import { Player, GuildQueue } from "discord-player";
 
+/**
+ * Event handler for errors
+ */
 export class PlayerEventHandler {
     constructor(private player: Player) { };
 

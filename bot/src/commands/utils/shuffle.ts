@@ -1,7 +1,11 @@
 import { Player, useQueue } from "discord-player";
 import { ButtonInteraction } from "discord.js";
-import { buttonCommand } from "../../interfaces/buttonInterface";
+import type { buttonCommand } from "../../interfaces/buttonInterface.js";
 
+/**
+ * Toggle shuffling feature
+ * @implements {buttonCommand}
+ */
 export class ShuffleButtonCommand implements buttonCommand {
     public readonly customId: string = "shuffle";
 
@@ -11,11 +15,7 @@ export class ShuffleButtonCommand implements buttonCommand {
         const queue = useQueue(interaction.guildId);
         if (!queue) return void interaction.followUp({ content: "There is no queue in this server.", flags: "Ephemeral"});
 
-        if (queue.isShuffling) {
-            queue.disableShuffle();
-        } else {
-            queue.enableShuffle();
-        }
+        queue.isShuffling ? queue.disableShuffle() : queue.enableShuffle();
         
         const content = `Shuffling has been ${queue.isShuffling ? "enabled" : "disabled"}`;
         await interaction.followUp({ content: content, flags: "SuppressNotifications" });

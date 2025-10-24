@@ -1,9 +1,11 @@
 import { useQueue } from "discord-player";
 import { EmbedBuilder } from "discord.js";
+/**
+ * Stops player
+ * @implements {buttonCommand}
+ */
 export class StopButtonCommand {
-    constructor() {
-        this.customId = "stop";
-    }
+    customId = "stop";
     async execute(interaction, player) {
         if (!interaction.deferred && !interaction.replied)
             await interaction.deferUpdate();

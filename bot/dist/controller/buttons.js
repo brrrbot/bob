@@ -7,7 +7,12 @@ import { RepeatButtonCommand } from "../commands/utils/repeat.js";
 import { ShuffleButtonCommand } from "../commands/utils/shuffle.js";
 import { SkipButtonCommand } from "../commands/utils/skip.js";
 import { StopButtonCommand } from "../commands/utils/stop.js";
+/**
+ * Button command handler
+ */
 export class ButtonHandler {
+    commands;
+    player;
     constructor(playerInstance) {
         this.player = playerInstance;
         this.commands = new Map();
@@ -30,6 +35,10 @@ export class ButtonHandler {
         }
         console.log(`Loaded ${this.commands.size} button commands`);
     }
+    /**
+     * Executes the interacted button command
+     * @param interaction Discord button interaction
+     */
     async handle(interaction) {
         const command = this.commands.get(interaction.customId);
         if (command) {

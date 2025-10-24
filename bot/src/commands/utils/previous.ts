@@ -1,7 +1,11 @@
 import { Player, useQueue } from "discord-player";
 import { ButtonInteraction } from "discord.js";
-import { buttonCommand } from "../../interfaces/buttonInterface";
+import type { buttonCommand } from "../../interfaces/buttonInterface.js";
 
+/**
+ * Plays the previous song
+ * @implements {buttonCommand}
+ */
 export class PreviousButtonCommand implements buttonCommand {
     public readonly customId: string = "prev";
 

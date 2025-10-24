@@ -1,8 +1,8 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 
 /**
- * Creates the action row buttons for the music player interface.
- * @returns An array of ActionRowBuilder containing all player buttons
+ * Create action buttons
+ * @returns Array of action buttions
  */
 export function buttons() {
     const playerButtons = new ActionRowBuilder<ButtonBuilder>().addComponents(

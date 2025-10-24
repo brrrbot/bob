@@ -1,13 +1,23 @@
 import { GuildMember } from "discord.js";
 import { SlashHandler } from "./slash.js";
 import { ButtonHandler } from "./buttons.js";
+/**
+ * Calls handler based on interaction type
+ */
 export class InteractionHandler {
+    client;
+    player;
+    buttonHandler;
+    slashHandler;
     constructor(client, player) {
         this.client = client;
         this.player = player;
         this.buttonHandler = new ButtonHandler(player);
         this.slashHandler = new SlashHandler(player);
     }
+    /**
+     * Register commands
+     */
     register() {
         this.client.on("interactionCreate", this.onInteractionCreate.bind(this));
     }

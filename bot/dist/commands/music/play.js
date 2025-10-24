@@ -1,17 +1,34 @@
 import { GuildMember, SlashCommandBuilder } from "discord.js";
 import { QueryType } from "discord-player";
-import { buildEmbed } from "../build/embedBuilder";
+import { buildEmbed } from "../build/embedBuilder.js";
 import BotConfig from "../../config/config.json" with { type: "json" };
+/**
+ * /play command functionality
+ * Handles searching and playing of music
+ * @implements {SlashCommand}
+ */
 export class PlayCommand {
-    constructor() {
-        this.commandName = "play";
-        this.data = new SlashCommandBuilder()
-            .setName("play")
-            .setDescription("Plays a song/playlist or adds it to queue.")
-            .addStringOption(option => option.setName("query")
-            .setDescription("The song URL (Inputting name might not work, use /search instead.)")
-            .setRequired(true));
-    }
+    /**
+     * Name of command
+     * @readonly
+     */
+    commandName = "play";
+    /**
+     * Command's configuration and definition
+     * @readonly
+     */
+    data = new SlashCommandBuilder()
+        .setName("play")
+        .setDescription("Plays a song/playlist or adds it to queue.")
+        .addStringOption(option => option.setName("query")
+        .setDescription("The song URL (Inputting name might not work, use /search instead.)")
+        .setRequired(true));
+    /**
+     * main logic
+     * @param interaction Discord /play interaction
+     * @param player Player instance
+     * @returns {Promise<void>}
+     */
     async execute(interaction, player) {
         await interaction.deferReply();
         const query = interaction.options.getString("query", true);

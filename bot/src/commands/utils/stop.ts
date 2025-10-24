@@ -1,7 +1,11 @@
 import { Player, useQueue } from "discord-player";
 import { ButtonInteraction, EmbedBuilder } from "discord.js";
-import { buttonCommand } from "../../interfaces/buttonInterface";
+import type { buttonCommand } from "../../interfaces/buttonInterface.js";
 
+/**
+ * Stops player
+ * @implements {buttonCommand}
+ */
 export class StopButtonCommand implements buttonCommand {
     public readonly customId: string = "stop";
 

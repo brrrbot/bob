@@ -1,6 +1,9 @@
-// src/handlers/ClientActivityHandler.ts
-import { Client, ActivityType, PresenceStatusData } from "discord.js";
+import { Client, ActivityType } from "discord.js";
+import type { PresenceStatusData } from "discord.js";
 
+/**
+ * Activity status rotator
+ */
 export class ClientActivityHandler {
     private client: Client;
     private intervalId: NodeJS.Timeout | null = null;
@@ -19,8 +22,11 @@ export class ClientActivityHandler {
         this.client = clientInstance;
     }
 
+    /**
+     * Register status rotator to Discord client
+     */
     public register() {
-        this.client.once("ready", this.onClientReady.bind(this));
+        this.client.once("clientReady", this.onClientReady.bind(this));
     }
 
     private onClientReady() {
@@ -43,6 +49,9 @@ export class ClientActivityHandler {
         }, this.intervalTime);
     }
 
+    /**
+     * Stop status rotation
+     */
     public stopActivityRotation() {
         if (this.intervalId) {
             clearInterval(this.intervalId);
