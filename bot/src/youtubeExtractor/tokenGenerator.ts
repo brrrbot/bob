@@ -29,7 +29,7 @@ function patchCanvasSupport(window: DOMWindow): void {
         value: null,
     });
 
-    HTMLCanvasElement.prototype.getContext = function getContext(type: string, options: string[]): any {
+    HTMLCanvasElement.prototype.getContext = (type: string, options: string[]): any => {
         if (type !== "2d") return null;
 
         const width = Number.isFinite(this.width) && this.width > 0 ? this.width : 300;
@@ -49,7 +49,7 @@ function patchCanvasSupport(window: DOMWindow): void {
         return state.context;
     }
 
-    HTMLCanvasElement.prototype.toDataURL = function toDataURL(...args: string[]): URL {
+    HTMLCanvasElement.prototype.toDataURL = (...args: string[]): URL => {
         if (!this._napiCanvasState?.canvas) {
             const width = Number.isFinite(this.width) && this.width > 0 ? this.width : 300;
             const height = Number.isFinite(this.height) && this.height > 0 ? this.height : 150;
@@ -130,7 +130,7 @@ function resetBotGuardState(): void {
         try {
             botguardClient.shutdown();
         } finally {
-            // No error output needed
+            // No actions needed
         }
     }
 

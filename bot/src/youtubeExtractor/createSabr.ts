@@ -41,7 +41,7 @@ export async function createSabrStream(videoId: string): Promise<Readable | null
     try {
         accountInfo = await innertube.account.getInfo();
     } catch (error) {
-        accountInfo = null;
+        throw error;
     }
     const dataSyncId = accountInfo?.contents?.contents[0]?.endpoint?.payload?.supportedTokens?.[2]?.datasyncIdToken?.datasyncIdToken ?? innertube.session.context.client.visitorData;
     const minter = await getWebPoMinter(innertube);
