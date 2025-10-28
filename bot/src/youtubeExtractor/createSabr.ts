@@ -3,7 +3,7 @@ import { buildSabrFormat, EnabledTrackTypes } from "googlevideo/utils";
 import { Readable } from "node:stream";
 import { getInnertube } from "./getInnertube.js";
 import { getWebPoMinter, invalidateWebPoMinter } from "./tokenGenerator.js";
-import { Constants, YTNodes } from "youtubei.js/agnostic";
+import { Constants, YT, YTNodes } from "youtubei.js/agnostic";
 import { SabrFormat } from "googlevideo/shared-types";
 
 const DEFAULT_OPTIONS: SabrPlaybackOptions = {
@@ -36,12 +36,12 @@ function toNodeReadable(stream: any): Readable | null {
 
 export async function createSabrStream(videoId: string): Promise<Readable | null> {
     const innertube = await getInnertube();
-    let accountInfo = null;
+    let accountInfo: YT.AccountInfo|null;
 
     try {
         accountInfo = await innertube.account.getInfo();
     } catch (error) {
-        throw error;
+        accountInfo = null;
     }
     const dataSyncId = accountInfo?.contents?.contents[0]?.endpoint?.payload?.supportedTokens?.[2]?.datasyncIdToken?.datasyncIdToken ?? innertube.session.context.client.visitorData;
     const minter = await getWebPoMinter(innertube);
