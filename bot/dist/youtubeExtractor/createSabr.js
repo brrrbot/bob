@@ -38,12 +38,12 @@ function toNodeReadable(stream) {
 }
 export async function createSabrStream(videoId) {
     const innertube = await getInnertube();
-    let accountInfo = null;
+    let accountInfo;
     try {
         accountInfo = await innertube.account.getInfo();
     }
     catch (error) {
-        throw error;
+        accountInfo = null;
     }
     const dataSyncId = accountInfo?.contents?.contents[0]?.endpoint?.payload?.supportedTokens?.[2]?.datasyncIdToken?.datasyncIdToken ?? innertube.session.context.client.visitorData;
     const minter = await getWebPoMinter(innertube);

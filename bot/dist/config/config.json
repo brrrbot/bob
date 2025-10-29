@@ -35,18 +35,16 @@
                 }
             },
             "Youtubei": {
-                "enabled": false,
+                "enabled": true,
                 "priority": 5,
                 "config": {
-                    "client": "WEB_EMBEDDED",
+                    "client": "WEB",
                     "highWaterMark": 3145728,
-                    "sabr": false,
-                    "potokens": true,
                     "useCookie": false
                 }
             },
             "YoutubeSabr": {
-                "enabled": true,
+                "enabled": false,
                 "priority": 5
             },
             "SoundCloud": {
