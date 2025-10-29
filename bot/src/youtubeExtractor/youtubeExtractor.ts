@@ -215,43 +215,6 @@ export class YoutubeSabrExtractor extends BaseExtractor {
             console.error(`[Youtubei Extractor Error] Error while creating stream: ${error}`);
         }
     }
-
-    async getRelatedTracks(track: Track, history: GuildQueueHistory): Promise<ExtractorInfo> {
-        let videoId = extractVideoId(track);
-        if (!videoId) throw new Error("[YoutubeiExtractor Error] Error at getRelatedTracks(): Unable to extract videoId.");
-
-        const info = await this.innertube.getInfo(videoId);
-        const next = info.watch_next_feed;
-
-        const recommended = (next as unknown as YTNodes.CompactVideo[]).filter((v: any) => !history.tracks.some((x) => x.url === `https://youtube.com/watch?v=${v.id}`) && v.type === "CompactVideo");
-
-        if (!recommended) {
-            this.context.player.debug("Unable to fetch recommendations.");
-            return this.createResponse(null, []);
-        }
-
-        const trackConstruct = recommended.map((v) => {
-            const duration = Util.buildTimeCode(Util.parseMS(v.duration.seconds * 1000));
-            const raw = {
-                live: v.is_live,
-                duration_ms: v.duration.seconds * 1000,
-                duration,
-            };
-
-            return new Track(this.context.player, {
-                title: v.title?.text ?? "UNKNOWN TITLE",
-                thumbnail: v.best_thumbnail?.url ?? v.thumbnails[0].url,
-                author: v.author?.name ?? "UNKNOWN AUTHOR",
-                requestedBy: track.requestedBy ?? null,
-                url: `https://youtube.com/watch?v=${v.video_id}`,
-                source: "youtube",
-                duration,
-                raw,
-            });
-        });
-
-        return this.createResponse(null, trackConstruct);
-    }
 }
 
 function extractVideoId(vid: any): string {

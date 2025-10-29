@@ -1,4 +1,4 @@
-import { YoutubeiExtractor } from "discord-player-youtubei";
+import { YoutubeExtractor } from "discord-player-youtubei";
 import { YoutubeSabrExtractor } from "../../youtubeExtractor/youtubeExtractor.js";
 import BotConfig from "../../config/config.json" with { type: "json" };
 import { SpotifyExtractor } from "discord-player-spotify";
@@ -10,9 +10,9 @@ import { Player, SearchResult } from "discord-player";
 import { buildEmbed, buildSearchEmbed } from "../build/embedBuilder.js";
 
 const extractorMap: Record<string, string> = {
-    "Youtube": YoutubeSabrExtractor.identifier,
+    "Youtube": YoutubeExtractor.identifier,
     "Spotify": SpotifyExtractor.identifier,
-    "Radiko": RadikoExtractor.identifier,
+    // "Radiko": RadikoExtractor.identifier, - disabled becos need work on it more
 };
 
 /**
@@ -41,7 +41,7 @@ export class SearchCommand implements SlashCommand {
                 .addChoices(
                     { name: "Youtube", value: "Youtube" },
                     { name: "Spotify", value: "Spotify" },
-                    { name: "Radiko", value: "Radiko" },
+                    // { name: "Radiko", value: "Radiko" }, - disabled becos need work on it more
                 )
         )
         .addStringOption(option =>
