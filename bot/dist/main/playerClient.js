@@ -1,8 +1,7 @@
 import { Client } from "discord.js";
 import { Player, onBeforeCreateStream } from "discord-player";
 import { SpotifyExtractor } from "discord-player-spotify";
-// import { YoutubeiExtractor } from "discord-player-youtubei";
-// import type { YoutubeiOptions } from "discord-player-youtubei";
+import { YoutubeExtractor } from "discord-player-youtubei";
 import { YoutubeSabrExtractor } from "../youtubeExtractor/youtubeExtractor.js";
 import { RadikoExtractor } from "discord-player-radiko-v2";
 import { Log } from "youtubei.js";
@@ -11,7 +10,6 @@ import { ClientActivityHandler } from "./activity.js";
 import { InteractionHandler } from "../controller/interaction.js";
 import { PlayerEventHandler } from "../error/errorEventHandler.js";
 import { MusicEventHandler } from "../controller/musicEvent.js";
-import { YoutubeiExtractor } from "discord-player-youtubei";
 /**
  * Discord Player client
  */
@@ -56,8 +54,8 @@ export class PlayerClient extends Client {
         const extractorsConfig = AppConfig.discordPlayer.extractors;
         if (extractorsConfig.Youtubei.enabled) {
             try {
-                await this.player.extractors.register(YoutubeiExtractor, {});
-                console.log("Youtubei extractor registered.");
+                await this.player.extractors.register(YoutubeExtractor, this.getYoutubeiOptions(extractorsConfig.Youtubei));
+                console.log("Youtube extractor registered.");
             }
             catch (error) {
                 console.error("Failed to register Youtubei extractor:", error);
@@ -96,9 +94,7 @@ export class PlayerClient extends Client {
             streamOptions: {
                 useClient: youtubeiConfig.config.client,
                 highWaterMark: youtubeiConfig.config.highWaterMark,
-            },
-            useServerAbrStream: youtubeiConfig.config.sabr,
-            generateWithPoToken: youtubeiConfig.config.potokens,
+            }
         };
     }
     getSpotifyOptions(spotifyConfig) {

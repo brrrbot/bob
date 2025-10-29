@@ -1,13 +1,12 @@
-import { YoutubeSabrExtractor } from "../../youtubeExtractor/youtubeExtractor.js";
+import { YoutubeExtractor } from "discord-player-youtubei";
 import BotConfig from "../../config/config.json" with { type: "json" };
 import { SpotifyExtractor } from "discord-player-spotify";
-import { RadikoExtractor } from "discord-player-radiko-v2";
 import { ActionRowBuilder, ButtonBuilder, ComponentType, GuildMember, SlashCommandBuilder, StringSelectMenuBuilder } from "discord.js";
 import { buildEmbed, buildSearchEmbed } from "../build/embedBuilder.js";
 const extractorMap = {
-    "Youtube": YoutubeSabrExtractor.identifier,
+    "Youtube": YoutubeExtractor.identifier,
     "Spotify": SpotifyExtractor.identifier,
-    "Radiko": RadikoExtractor.identifier,
+    // "Radiko": RadikoExtractor.identifier, - disabled becos need work on it more
 };
 /**
  * /search command functionality
@@ -30,7 +29,7 @@ export class SearchCommand {
         .addStringOption(option => option.setName("source")
         .setDescription("Specify the source to search from.")
         .setRequired(true)
-        .addChoices({ name: "Youtube", value: "Youtube" }, { name: "Spotify", value: "Spotify" }, { name: "Radiko", value: "Radiko" }))
+        .addChoices({ name: "Youtube", value: "Youtube" }, { name: "Spotify", value: "Spotify" }))
         .addStringOption(option => option.setName("query")
         .setDescription("Song name to search for.")
         .setRequired(true));

@@ -20,7 +20,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "deploy-command": "node ./bot/dist/UI/deployCommand.js",
+    "deploy-command": "npm run build && node ./bot/dist/UI/deployCommand.js",
     "start": "npm run build && node ./bot/dist/main/index.js"
   }
 }
