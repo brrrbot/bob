@@ -37,16 +37,14 @@ function toNodeReadable(stream) {
     throw new TypeError("Unsupported stream type from SABR");
 }
 export async function createSabrStream(videoId) {
-    console.log(videoId); // debugging line
     const innertube = await getInnertube();
-    let accountInfo = null;
+    let accountInfo;
     try {
         accountInfo = await innertube.account.getInfo();
     }
     catch (error) {
         accountInfo = null;
     }
-    console.log(accountInfo); // debugging line
     const dataSyncId = accountInfo?.contents?.contents[0]?.endpoint?.payload?.supportedTokens?.[2]?.datasyncIdToken?.datasyncIdToken ?? innertube.session.context.client.visitorData;
     const minter = await getWebPoMinter(innertube);
     const contentPoToken = await minter.mint(videoId);
@@ -90,7 +88,6 @@ export async function createSabrStream(videoId) {
     serverAbrStream.on("streamProtectionStatusUpdate", async (statusUpdate) => {
         if (statusUpdate.status !== lastStatus)
             lastStatus = statusUpdate.status;
-        console.log(statusUpdate); // debugging line
         if (statusUpdate.status === 2) {
             protectionFailureCount = Math.min(protectionFailureCount + 1, 10);
             try {

@@ -11,7 +11,7 @@
     "discord-player": "^7.1.0",
     "discord-player-radiko-v2": "^1.0.0",
     "discord-player-spotify": "^1.1.2",
-    "discord-player-youtubei": "^1.5.0",
+    "discord-player-youtubei": "file:discord-player-youtubei-2.0.0.tgz",
     "discord.js": "^14.22.1",
     "dotenv": "^17.2.2",
     "googlevideo": "^4.0.4",
