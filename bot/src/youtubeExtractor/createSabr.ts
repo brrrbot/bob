@@ -3,11 +3,11 @@ import { buildSabrFormat, EnabledTrackTypes } from "googlevideo/utils";
 import { Readable } from "node:stream";
 import { getInnertube } from "./getInnertube.js";
 import { getWebPoMinter, invalidateWebPoMinter } from "./tokenGenerator.js";
-import { Constants, YT, YTNodes } from "youtubei.js/agnostic";
+import Innertube, { Constants, YT, YTNodes } from "youtubei.js/agnostic";
 import { SabrFormat } from "googlevideo/shared-types";
 
 const DEFAULT_OPTIONS: SabrPlaybackOptions = {
-    audioQuality: "MEDIUM",
+    audioQuality: "AUDIO_QUALITY_MEDIUM",
     enabledTrackTypes: EnabledTrackTypes.AUDIO_ONLY,
     preferH264: true,
 }
@@ -35,7 +35,7 @@ function toNodeReadable(stream: any): Readable | null {
 }
 
 export async function createSabrStream(videoId: string): Promise<Readable | null> {
-    const innertube = await getInnertube();
+    const innertube: Innertube|null = await getInnertube();
     let accountInfo: YT.AccountInfo|null;
 
     try {
@@ -108,10 +108,6 @@ export async function createSabrStream(videoId: string): Promise<Readable | null
             protectionFailureCount = 0;
         }
     });
-
-    // serverAbrStream.on("error", (error: Error) => {
-    //     console.error("SABR stream error:", error);
-    // });
 
     const { audioStream } = await serverAbrStream.start(DEFAULT_OPTIONS);
     const nodeStream = toNodeReadable(audioStream);

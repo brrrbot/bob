@@ -29,7 +29,7 @@ function patchCanvasSupport(window: DOMWindow): void {
         value: null,
     });
 
-    HTMLCanvasElement.prototype.getContext = (type: string, options: string[]): any => {
+    HTMLCanvasElement.prototype.getContext = (type: string, options: CanvasRenderingContext2DSettings): any => {
         if (type !== "2d") return null;
 
         const width = Number.isFinite(this.width) && this.width > 0 ? this.width : 300;
@@ -49,7 +49,7 @@ function patchCanvasSupport(window: DOMWindow): void {
         return state.context;
     }
 
-    HTMLCanvasElement.prototype.toDataURL = (...args: string[]): URL => {
+    HTMLCanvasElement.prototype.toDataURL = (...args: [type?: string, quality?: number]): string => {
         if (!this._napiCanvasState?.canvas) {
             const width = Number.isFinite(this.width) && this.width > 0 ? this.width : 300;
             const height = Number.isFinite(this.height) && this.height > 0 ? this.height : 150;

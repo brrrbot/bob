@@ -22,7 +22,7 @@ export class YoutubeSabrExtractor extends BaseExtractor {
         return true;
     }
     async handle(query, context) {
-        if (!checkIsUrl(query)) {
+        if (!isUrl(query)) {
             let topResults;
             let results;
             let trackResponse = new Array;
@@ -206,14 +206,12 @@ async function searchYoutubeByQueryName(innertube, query) {
     }
     return search;
 }
-function checkIsUrl(query) {
-    let isUrl;
+function isUrl(input) {
     try {
-        new URL(query);
-        isUrl = true;
+        const url = new URL(input);
+        return ["http:", "https:"].includes(url.protocol);
     }
     catch (error) {
-        isUrl = false;
+        return false;
     }
-    return isUrl || /^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(query);
 }

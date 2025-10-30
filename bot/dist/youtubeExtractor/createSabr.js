@@ -5,7 +5,7 @@ import { getInnertube } from "./getInnertube.js";
 import { getWebPoMinter, invalidateWebPoMinter } from "./tokenGenerator.js";
 import { Constants, YTNodes } from "youtubei.js/agnostic";
 const DEFAULT_OPTIONS = {
-    audioQuality: "MEDIUM",
+    audioQuality: "AUDIO_QUALITY_MEDIUM",
     enabledTrackTypes: EnabledTrackTypes.AUDIO_ONLY,
     preferH264: true,
 };
@@ -110,9 +110,6 @@ export async function createSabrStream(videoId) {
             protectionFailureCount = 0;
         }
     });
-    // serverAbrStream.on("error", (error: Error) => {
-    //     console.error("SABR stream error:", error);
-    // });
     const { audioStream } = await serverAbrStream.start(DEFAULT_OPTIONS);
     const nodeStream = toNodeReadable(audioStream);
     return nodeStream;

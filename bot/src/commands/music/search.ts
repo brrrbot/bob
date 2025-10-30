@@ -1,8 +1,8 @@
-import { YoutubeExtractor } from "discord-player-youtubei";
-import { YoutubeSabrExtractor } from "../../youtubeExtractor/youtubeExtractor.js";
+// import { YoutubeExtractor } from "discord-player-youtubei";
+import { YoutubeSabrExtractor as YoutubeExtractor } from "../../youtubeExtractor/youtubeExtractor.js";
 import BotConfig from "../../config/config.json" with { type: "json" };
 import { SpotifyExtractor } from "discord-player-spotify";
-import { RadikoExtractor } from "discord-player-radiko-v2";
+// import { RadikoExtractor } from "discord-player-radiko-v2";
 import type { SlashCommand } from "../../interfaces/slashInterface.js";
 import { ActionRow, ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, ComponentType, GuildMember, Message, SlashCommandBuilder, StringSelectMenuBuilder } from "discord.js";
 import type { APIButtonComponent, APIStringSelectComponent, Interaction, MessageActionRowComponent } from "discord.js";

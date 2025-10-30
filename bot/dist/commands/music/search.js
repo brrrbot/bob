@@ -1,4 +1,5 @@
-import { YoutubeExtractor } from "discord-player-youtubei";
+// import { YoutubeExtractor } from "discord-player-youtubei";
+import { YoutubeSabrExtractor as YoutubeExtractor } from "../../youtubeExtractor/youtubeExtractor.js";
 import BotConfig from "../../config/config.json" with { type: "json" };
 import { SpotifyExtractor } from "discord-player-spotify";
 import { ActionRowBuilder, ButtonBuilder, ComponentType, GuildMember, SlashCommandBuilder, StringSelectMenuBuilder } from "discord.js";

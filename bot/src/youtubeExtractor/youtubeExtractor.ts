@@ -30,7 +30,7 @@ export class YoutubeSabrExtractor extends BaseExtractor {
     }
 
     async handle(query: string, context: ExtractorSearchContext): Promise<ExtractorInfo> {
-        if (!checkIsUrl(query)) {
+        if (!isUrl(query)) {
             let topResults: any[];
             let results: YT.Search;
             let trackResponse: Track[] = new Array<Track>;
@@ -215,6 +215,112 @@ export class YoutubeSabrExtractor extends BaseExtractor {
             console.error(`[Youtubei Extractor Error] Error while creating stream: ${error}`);
         }
     }
+
+    // async getRelatedTracks(track: Track, history: GuildQueueHistory): Promise<ExtractorInfo> {
+    //     if (!this.innertube) throw new Error("Innertube not initialized.");
+
+    //     const seedUrl = track.url || track.raw?.id || "";
+    //     let videoId = extractVideoId(seedUrl);
+    //     console.log("videoid: ", videoId); // debugging line
+    //     if (!videoId) throw new Error("[Youtube Extractor Error] Error at getRelatedTracks(): Unable to extract videoId");
+
+    //     const info: YT.VideoInfo = await this.innertube.getInfo(videoId);
+    //     console.log("videoinfo; ", info); // debugging line
+
+    //     const collectFromFeed = (feed: any): any[] => {
+    //         try {
+    //             if (Array.isArray(feed)) return feed;
+    //             if (Array.isArray(feed?.contents)) return feed.contents;
+    //         } finally {
+    //             // nothing to do
+    //         }
+    //         return [];
+    //     }
+    //     let feedItem: any[] = collectFromFeed(info.watch_next_feed);
+
+    //     try {
+    //         if (info.wn_has_continuation && feedItem.length < 5) {
+    //             await info.getWatchNextContinuation();
+    //             feedItem = feedItem.concat(collectFromFeed(info.watch_next_feed));
+    //         }
+    //     } finally {
+    //         // nothing to do
+    //     }
+    //     console.log("feeditem: ", feedItem); // debugging line
+
+    //     let recommended: YTNodes.LockupView[] = (
+    //         feedItem as unknown as YTNodes.LockupView[]
+    //     ).filter(
+    //         (v) => v?.content_type === "VIDEO" && !history.tracks.some((x) => x.url === `https://youtube.com/watch?v=${v?.content_id}`)
+    //     );
+
+    //     // Fallback: if nothing from watch next, try a lightweight search using title/author
+    //     if (!recommended || recommended.length === 0) {
+    //         try {
+    //             const title = track?.title ?? "";
+    //             const author = track?.author ?? track?.raw?.author ?? "";
+
+    //             const query = [author, title].filter(Boolean).join(" - ") || title || author;
+    //             const results = await searchYoutubeByQueryName(this.innertube, query);
+
+    //             const fromSearch = (results?.results ?? []).filter(
+    //                 (v: any): v is YTNodes.Video =>
+    //                     v?.type === "Video" &&
+    //                     !!v?.video_id &&
+    //                     !history.tracks.some(
+    //                         (x) => x.url === `https://www.youtube.com/watch?v=${v.video_id}`
+    //                     )
+    //             );
+    //             recommended = fromSearch;
+    //         } finally {
+    //             // nothing to do
+    //         }
+    //     }
+    //     console.log("recommended: ", recommended); // debugging line
+
+    //     if (!recommended || recommended.length === 0) {
+    //         console.log("Unable to fetch recommendations.")
+    //         return this.createResponse(null, []);
+    //     }
+
+    //     const seenIds = new Set<string>();
+    //     const trackConstruct: Track[] = [];
+
+    //     for (const v of recommended) {
+    //         const id = (v as any)?.video_id || (v as any)?.id || (v as any)?.content_id;
+
+    //         if (!id || seenIds.has(id)) continue;
+    //         seenIds.add(id);
+
+    //         console.log("constructing tracks..."); // debugging line
+    //         const info = await this.innertube.getBasicInfo(id);
+    //         const durationMs = (info.basic_info?.duration ?? 0) * 1000;
+
+    //         console.log("new track info: ", info); // debugging line
+    //         let newTrack: Track;
+
+    //         try {
+    //             newTrack = new Track(this.context.player, {
+    //                 title: info.basic_info?.title ?? "UNKNOWN TITLE",
+    //                 author: info.basic_info?.author ?? "UNKNOWN AUTHOR",
+    //                 thumbnail: info.basic_info?.thumbnail?.[0]?.url ?? null,
+    //                 url: `https://www.youtube.com/watch?v=${videoId}`,
+    //                 duration: Util.buildTimeCode(Util.parseMS(durationMs)),
+    //                 source: "youtube",
+    //                 requestedBy: history.previousTrack.requestedBy ?? undefined,
+    //             });
+    //         } catch (error) {
+    //             console.error("[Youtube Extractor Error] Error constructing next relate track: ", error);
+    //         }
+            
+    //         console.log("constructed: ", newTrack); // debugging line
+
+    //         trackConstruct.push(newTrack);
+    //     }
+
+    //     console.log("tracks: ", trackConstruct); // debugging line
+    //     return this.createResponse(null, trackConstruct);
+    // }
 }
 
 function extractVideoId(vid: any): string {
@@ -238,13 +344,11 @@ async function searchYoutubeByQueryName(innertube: Innertube, query: string): Pr
     return search;
 }
 
-function checkIsUrl(query: string): boolean {
-    let isUrl: boolean;
+function isUrl(input: string) {
     try {
-        new URL(query);
-        isUrl = true;
+        const url = new URL(input);
+        return ["http:", "https:"].includes(url.protocol);
     } catch (error) {
-        isUrl = false;
+        return false;
     }
-    return isUrl || /^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(query);
 }
