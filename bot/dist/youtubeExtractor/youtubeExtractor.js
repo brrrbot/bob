@@ -166,7 +166,7 @@ export class YoutubeSabrExtractor extends BaseExtractor {
             return this.createResponse(null, [trackObj]);
         }
         catch (error) {
-            console.error(`[YoutubeiExtractor Error]: ${error}`);
+            console.error(`[YoutubeExtractor Error]: ${error}`);
             return this.createResponse(null, []);
         }
     }
@@ -181,7 +181,7 @@ export class YoutubeSabrExtractor extends BaseExtractor {
             return nodeStream;
         }
         catch (error) {
-            console.error(`[Youtubei Extractor Error] Error while creating stream: ${error}`);
+            console.error(`[Youtube Extractor Error] Error while creating stream: ${error}`);
         }
     }
 }
