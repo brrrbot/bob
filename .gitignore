@@ -1,6 +1,4 @@
 node_modules
 .env
 package-lock.json
-/bot/src/commands/build/*.json
-/bot/dist/commands/build/*.json
 *.tgz
