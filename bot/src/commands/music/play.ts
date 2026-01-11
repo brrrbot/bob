@@ -52,6 +52,7 @@ export class PlayCommand implements SlashCommand {
 
         let searchEngine: SearchQueryType = QueryType.AUTO;
         if (/radiko\.jp/.test(query)) searchEngine = `ext:radiko` as SearchQueryType;
+        if (/spotify/.test(query)) searchEngine = QueryType.SPOTIFY as SearchQueryType;
 
         try {
             const { track, searchResult } = await player.play(channel as any, query, {
