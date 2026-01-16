@@ -63,7 +63,6 @@ export class PlayCommand implements SlashCommand {
                 searchEngine: searchEngine,
                 nodeOptions: {
                     metadata: interaction.channel,
-                    highWaterMark: BotConfig.discordPlayer.extractors.Youtubei.config.highWaterMark,
                     ...BotConfig.discordPlayer.playerOptions,
                 }
             });
