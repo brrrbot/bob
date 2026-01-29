@@ -5,6 +5,7 @@ import { getInnertube } from "./getInnertube.js";
 import { getWebPoMinter, invalidateWebPoMinter } from "./tokenGenerator.js";
 import Innertube, { Constants, YT, YTNodes } from "youtubei.js/agnostic";
 import { SabrFormat } from "googlevideo/shared-types";
+import AppConfig from "../config/config.json" with { type: "json" };
 
 const DEFAULT_OPTIONS: SabrPlaybackOptions = {
     audioQuality: "AUDIO_QUALITY_MEDIUM",
@@ -28,7 +29,7 @@ function toNodeReadable(stream: any): Readable | null {
                 reader.releaseLock?.();
             }
         })();
-        return Readable.from(iterable);
+        return Readable.from(iterable, { highWaterMark: AppConfig.discordPlayer.extractors.Youtubei.config.highWaterMark });
     }
     if (Symbol.asyncIterator in stream) return Readable.from(stream);
     throw new TypeError("Unsupported stream type from SABR");
