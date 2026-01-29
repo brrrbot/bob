@@ -35,7 +35,7 @@
                 }
             },
             "Youtubei": {
-                "enabled": false,
+                "enabled": true,
                 "priority": 5,
                 "config": {
                     "client": "WEB",
@@ -44,7 +44,7 @@
                 }
             },
             "YoutubeSabr": {
-                "enabled": true,
+                "enabled": false,
                 "priority": 5
             },
             "SoundCloud": {
