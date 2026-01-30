@@ -29,7 +29,7 @@ function toNodeReadable(stream: any): Readable | null {
                 reader.releaseLock?.();
             }
         })();
-        return Readable.from(iterable, { highWaterMark: AppConfig.discordPlayer.extractors.Youtubei.config.highWaterMark });
+        return Readable.from(iterable);
     }
     if (Symbol.asyncIterator in stream) return Readable.from(stream);
     throw new TypeError("Unsupported stream type from SABR");
