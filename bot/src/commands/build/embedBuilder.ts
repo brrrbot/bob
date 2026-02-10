@@ -40,7 +40,7 @@ export function buildEmbed(item: Track | Playlist) {
     } else {
         embed.addFields(
             { name: "Song Artist", value: item.author },
-            { name: "Duration", value: item.duration, inline: true },
+            { name: "Duration", value: parseInt(item.duration) === 0 ? 'Live' : item.duration, inline: true },
             { name: "Requested By", value: item.requestedBy?.username || "Unknown", inline: true }
         );
     }

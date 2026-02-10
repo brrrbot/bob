@@ -118,7 +118,7 @@ export class PlayerClient extends Client {
             streamOptions: {
                 useClient: youtubeiConfig.config.client,
                 highWaterMark: youtubeiConfig.config.highWaterMark,
-            }
+            },
         };
     }
 

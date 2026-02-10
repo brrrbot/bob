@@ -42,8 +42,7 @@ export class PlayCommand {
         if (botVoiceChannelId && channel.id !== botVoiceChannelId)
             return void await interaction.followUp({ content: "You are not in my voice channel.", flags: "Ephemeral" });
         let searchEngine = QueryType.AUTO;
-        if (/radiko\.jp/.test(query))
-            searchEngine = `ext:radiko`;
+        // if (/radiko\.jp/.test(query)) searchEngine = `ext:radiko` as SearchQueryType;
         try {
             const { track, searchResult } = await player.play(channel, query, {
                 requestedBy: interaction.user,

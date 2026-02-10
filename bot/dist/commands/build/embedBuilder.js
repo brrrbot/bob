@@ -29,7 +29,7 @@ export function buildEmbed(item) {
         embed.addFields({ name: "Playlist Length", value: `${item.tracks.length} songs`, inline: true }, { name: "Requested By", value: item.tracks[0]?.requestedBy?.username || "Unknown", inline: true });
     }
     else {
-        embed.addFields({ name: "Song Artist", value: item.author }, { name: "Duration", value: item.duration, inline: true }, { name: "Requested By", value: item.requestedBy?.username || "Unknown", inline: true });
+        embed.addFields({ name: "Song Artist", value: item.author }, { name: "Duration", value: item.live ? "Live" : item.duration, inline: true }, { name: "Requested By", value: item.requestedBy?.username || "Unknown", inline: true });
     }
     return embed;
 }
